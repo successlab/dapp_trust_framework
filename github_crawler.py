@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from secrets.cookies import github_cookie
 
 
-def usage_stats(contract_address):
+def get_github_search_results_page(contract_address):
     cookies = github_cookie
 
     headers = {
@@ -28,7 +28,12 @@ def usage_stats(contract_address):
     }
 
     response = requests.get('https://github.com/search', params=params, cookies=cookies, headers=headers)
-    response_soup = BeautifulSoup(response.content, 'html.parser')
+
+    return response.content
+
+
+def usage_stats(search_results_content):
+    response_soup = BeautifulSoup(search_results_content, 'html.parser')
 
     languages_and_counts_raw = response_soup.find("div", class_="border rounded-2 p-3 mb-3 d-none d-md-block") \
         .find_all("a", class_="filter-item")
@@ -46,4 +51,6 @@ def usage_stats(contract_address):
 
 if __name__ == '__main__':
     contract_address = sys.argv[1]
-    usage_stats(contract_address)
+
+    search_results_content = get_github_search_results_page(contract_address)
+    usage_stats(search_results_content)
