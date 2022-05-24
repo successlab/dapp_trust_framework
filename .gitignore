@@ -136,3 +136,4 @@ dmypy.json
 
 # Results
 /soup_results.html
+/secrets/
