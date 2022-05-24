@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from secrets.cookies import github_cookie
 
+
 def usage_stats(contract_address):
     cookies = github_cookie
 
@@ -29,7 +30,7 @@ def usage_stats(contract_address):
     response = requests.get('https://github.com/search', params=params, cookies=cookies, headers=headers)
     response_soup = BeautifulSoup(response.content, 'html.parser')
 
-    languages_and_counts_raw = response_soup.find("div", class_="border rounded-2 p-3 mb-3 d-none d-md-block")\
+    languages_and_counts_raw = response_soup.find("div", class_="border rounded-2 p-3 mb-3 d-none d-md-block") \
         .find_all("a", class_="filter-item")
 
     lang_counts = {}
