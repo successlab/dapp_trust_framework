@@ -27,9 +27,23 @@ def usage_stats(contract_address):
     }
 
     response = requests.get('https://github.com/search', params=params, cookies=cookies, headers=headers)
-    response_soup = BeautifulSoup(response.content)
+    response_soup = BeautifulSoup(response.content, 'html.parser')
 
-    print(response_soup.text)
+    # usage_counts = response_soup.find("div", class_="border rounded-2 p-3 mb-3 d-none d-md-block")\
+    #     .find_all("span", class_="count")
+
+    languages_and_counts_raw = response_soup.find("div", class_="border rounded-2 p-3 mb-3 d-none d-md-block")\
+        .find_all("a", class_="filter-item")
+
+    lang_counts = {}
+
+    for raw_ele in languages_and_counts_raw:
+        content_eles = raw_ele.text.split()
+        lang_name = ''.join(content_eles[1:])
+        lang_files_count = int(content_eles[0])
+        lang_counts[lang_name] = lang_files_count
+
+    print(lang_counts)
 
 
 if __name__ == '__main__':
