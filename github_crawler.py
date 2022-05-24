@@ -4,7 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from secrets.cookies import github_cookie
 
-def usage_stats(contract_address):
+
+def get_github_search_results_page(contract_address):
     cookies = github_cookie
 
     headers = {
@@ -27,9 +28,14 @@ def usage_stats(contract_address):
     }
 
     response = requests.get('https://github.com/search', params=params, cookies=cookies, headers=headers)
-    response_soup = BeautifulSoup(response.content, 'html.parser')
 
-    languages_and_counts_raw = response_soup.find("div", class_="border rounded-2 p-3 mb-3 d-none d-md-block")\
+    return response.content
+
+
+def useage_stats(search_results_content):
+    response_soup = BeautifulSoup(search_results_content, 'html.parser')
+
+    languages_and_counts_raw = response_soup.find("div", class_="border rounded-2 p-3 mb-3 d-none d-md-block") \
         .find_all("a", class_="filter-item")
 
     lang_counts = {}
@@ -40,9 +46,15 @@ def usage_stats(contract_address):
         lang_files_count = int(content_eles[0])
         lang_counts[lang_name] = lang_files_count
 
-    print(lang_counts)
+    return lang_counts
+
+def get_overall_useage_score(lang_counts):
+    return sum(lang_counts.values())
 
 
 if __name__ == '__main__':
     contract_address = sys.argv[1]
-    usage_stats(contract_address)
+
+    search_results_content = get_github_search_results_page(contract_address)
+    lang_counts = useage_stats(search_results_content)
+    print(get_overall_useage_score(lang_counts))
