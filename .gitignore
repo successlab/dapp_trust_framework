@@ -130,4 +130,9 @@ dmypy.json
 
 # IDE Stuff
 .idea/
+
+# Secrets
 /github_access_token.txt
+
+# Results
+/soup_results.html
