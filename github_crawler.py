@@ -3,7 +3,8 @@ import sys
 from secrets.cookies import github_cookie
 
 from statops.github_scoring import get_overall_usage_score
-from pageops.content_ops import get_github_search_results_page, usage_stats, get_max_pagecount
+from pageops.content_ops import usage_stats, get_max_pagecount
+from pageops.fetching.search_results import get_github_search_results_page
 
 
 if __name__ == '__main__':
