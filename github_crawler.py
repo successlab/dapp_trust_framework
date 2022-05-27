@@ -32,7 +32,7 @@ def get_github_search_results_page(contract_address):
     return response.content
 
 
-def useage_stats(search_results_content):
+def usage_stats(search_results_content):
     response_soup = BeautifulSoup(search_results_content, 'html.parser')
 
     languages_and_counts_raw = response_soup.find("div", class_="border rounded-2 p-3 mb-3 d-none d-md-block") \
@@ -48,7 +48,12 @@ def useage_stats(search_results_content):
 
     return lang_counts
 
-def get_overall_useage_score(lang_counts):
+
+def get_max_pagecount(search_results_content):
+    pass
+
+
+def get_overall_usage_score(lang_counts):
     return sum(lang_counts.values())
 
 
@@ -56,5 +61,5 @@ if __name__ == '__main__':
     contract_address = sys.argv[1]
 
     search_results_content = get_github_search_results_page(contract_address)
-    lang_counts = useage_stats(search_results_content)
-    print(get_overall_useage_score(lang_counts))
+    lang_counts = usage_stats(search_results_content)
+    print("Overall usage scoare: ", get_overall_usage_score(lang_counts))
