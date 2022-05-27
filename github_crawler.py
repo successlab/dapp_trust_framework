@@ -1,11 +1,9 @@
 import sys
 
 from secrets.cookies import github_cookie
+
+from statops.github_scoring import get_overall_usage_score
 from pageops.content_ops import get_github_search_results_page, usage_stats, get_max_pagecount
-
-
-def get_overall_usage_score(lang_counts):
-    return sum(lang_counts.values())
 
 
 if __name__ == '__main__':
