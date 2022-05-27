@@ -50,7 +50,9 @@ def usage_stats(search_results_content):
 
 
 def get_max_pagecount(search_results_content):
-    pass
+    response_soup = BeautifulSoup(search_results_content, 'html.parser')
+    paginator = response_soup.find("div", class_="paginate-container codesearch-pagination-container")
+    return int(paginator.find_all("a")[-2].text)
 
 
 def get_overall_usage_score(lang_counts):
@@ -63,3 +65,4 @@ if __name__ == '__main__':
     search_results_content = get_github_search_results_page(contract_address)
     lang_counts = usage_stats(search_results_content)
     print("Overall usage scoare: ", get_overall_usage_score(lang_counts))
+    print("Total number of pages available: ", get_max_pagecount(search_results_content))
