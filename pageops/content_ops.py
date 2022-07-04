@@ -10,10 +10,13 @@ def usage_stats(search_results_content):
     lang_counts = {}
 
     for raw_ele in languages_and_counts_raw:
-        content_eles = raw_ele.text.split()
-        lang_name = ''.join(content_eles[1:])
-        lang_files_count = int(content_eles[0])
-        lang_counts[lang_name] = lang_files_count
+        try:
+            content_eles = raw_ele.text.split()
+            lang_name = ''.join(content_eles[1:])
+            lang_files_count = int(content_eles[0])
+            lang_counts[lang_name] = lang_files_count
+        except:
+            pass
 
     return lang_counts
 
