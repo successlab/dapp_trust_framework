@@ -2,9 +2,9 @@ import sys
 
 from secrets.cookies import github_cookie
 
-from statops.github_scoring import get_overall_usage_score
-from pageops.content_ops import usage_stats, get_max_pagecount, get_contract_users_and_repos
-from pageops.fetching.search_results import get_github_search_results_page
+from utils.statops.github_scoring import get_overall_usage_score
+from utils.crawler_ops.content_ops import usage_stats, get_max_pagecount, get_contract_users_and_repos
+from utils.crawler_ops.fetching.search_results import get_github_search_results_page
 
 
 if __name__ == '__main__':
