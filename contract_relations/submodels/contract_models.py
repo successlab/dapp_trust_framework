@@ -5,7 +5,7 @@ from contract_relations.submodels.people_models import Person
 
 
 class Contract(models.Model):
-    address = models.CharField(max_length=1024)
+    address = models.CharField(max_length=1024, null=True, default=None)
     dapp = models.ForeignKey(DApp, on_delete=models.CASCADE)
     github_repo = models.CharField(max_length=2048, null=True, default=None)
     code_location_url = models.CharField(max_length=2048, null=True, default=None)
