@@ -26,6 +26,6 @@ jobs:
     - name: Run Tests
       env:
         ENV_TYPE: CI
-        GITHUB_COOKIE: ${{secrets.GITHUB_COOKIE}}
+        GHUB_COOKIE: ${{secrets.GITHUB_COOKIE}}
       run: |
         python manage.py test
