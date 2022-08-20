@@ -132,9 +132,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Github cookie
 try:
     from secrets.cookies import github_cookie
-
     cookie_to_add = github_cookie
-except (ImportError):
+
+except ModuleNotFoundError:
     read_cookie = os.environ["GHUB_COOKIE"]
     print("Env Type: " + os.environ["ENV_TYPE"])
     print("Cookie read from the env: " + read_cookie)
