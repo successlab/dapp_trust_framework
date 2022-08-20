@@ -136,6 +136,9 @@ try:
     from secrets.cookies import github_cookie
     cookie_to_add = github_cookie
 except(ImportError):
+    read_cookie = os.environ["GHUB_COOKIE"]
+    print("Env Type: " + os.environ["ENV_TYPE"])
+    print("Cookie read from the env: " + read_cookie)
     cookie_to_add = json.loads(os.environ["GHUB_COOKIE"])
 
 GITHUB_COOKIE = cookie_to_add
