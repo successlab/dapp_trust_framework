@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-*5gxx+o_3x@k9a34o2s@tsw7)u$!6rvh52+vmila#+^d31fm2u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -128,3 +130,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Github cookie
+try:
+    from secrets.cookies import github_cookie
+    cookie_to_add = github_cookie
+except(ImportError):
+    cookie_to_add = json.loads(os.environ["GITHUB_COOKIE"])
+
+GITHUB_COOKIE = cookie_to_add

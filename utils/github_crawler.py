@@ -1,6 +1,4 @@
-import sys
-
-from secrets.cookies import github_cookie
+from django.conf import settings
 
 from utils.statops.github_scoring import get_overall_usage_score
 from utils.crawler_ops.content_ops import usage_stats, get_max_pagecount, get_contract_users_and_repos
@@ -25,7 +23,7 @@ def write_search_results_into_db(results, parent_contract_address):
         print(user)
 
 def get_github_search_results(contract_address):
-    search_results_content = get_github_search_results_page(contract_address, github_cookie)
+    search_results_content = get_github_search_results_page(contract_address, settings.GITHUB_COOKIE)
     lang_counts = usage_stats(search_results_content)
     print("Overall usage scoare: ", get_overall_usage_score(lang_counts))
     print("Total number of pages available: ", get_max_pagecount(search_results_content))
