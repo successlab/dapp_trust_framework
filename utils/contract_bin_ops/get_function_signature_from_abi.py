@@ -16,7 +16,7 @@ def getFiles(path):
 
 
 def getRawContractName(file_name):
-    pattern = re.compile(r'\s*(\S+)\..*')
+    pattern = re.compile(r"\s*(\S+)\..*")
     m = pattern.match(file_name)
     if m:
         name = m.group(1)
@@ -105,23 +105,37 @@ def solve_dir(abi_dir):
 def main():
     global args
     parser = argparse.ArgumentParser()
-    group = parser.add_argument_group('Model 1')
+    group = parser.add_argument_group("Model 1")
     groupex = group.add_mutually_exclusive_group(required=True)
 
-    groupex.add_argument("-c", "--sols", type=str, dest="sols",
-                         help="set existing sols name for fetch fun sig map")
-    groupex.add_argument("-a", "--all", help="handle all contracts in --abi_dir for  fetch all fun sig map",
-                         action="store_true")
+    groupex.add_argument(
+        "-c",
+        "--sols",
+        type=str,
+        dest="sols",
+        help="set existing sols name for fetch fun sig map",
+    )
+    groupex.add_argument(
+        "-a",
+        "--all",
+        help="handle all contracts in --abi_dir for  fetch all fun sig map",
+        action="store_true",
+    )
     groupex2 = group.add_mutually_exclusive_group(required=True)
-    groupex2.add_argument("-ad", "--abi_dir", type=str, dest="abi_dir",
-                          help="set contracts' abis dir from where to get the #sols.abis and #sols specified by -c or by -a")
+    groupex2.add_argument(
+        "-ad",
+        "--abi_dir",
+        type=str,
+        dest="abi_dir",
+        help="set contracts' abis dir from where to get the #sols.abis and #sols specified by -c or by -a",
+    )
     args = parser.parse_args()
     if args.contract:
         if args.contract.find("."):
             args.contract = args.contract.split(".")[0] + ".abis"
     if args.abi_dir:
         if args.abi_dir[-1] == "/":
-            args.abi_dir = args.abi_dir[:len(args.abi_dir) - 1]
+            args.abi_dir = args.abi_dir[: len(args.abi_dir) - 1]
     if not args.all:
         solve_file(args.abi_dir, args.contract)
     else:

@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class ContractRelationsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'contract_relations'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "contract_relations"

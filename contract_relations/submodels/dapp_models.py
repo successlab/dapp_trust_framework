@@ -4,9 +4,7 @@ from contract_relations.submodels.people_models import Person
 
 
 class DApp(models.Model):
-    name = models.CharField(
-        max_length=250, null=True, default=None
-    )
+    name = models.CharField(max_length=250, null=True, default=None)
     website_url = models.CharField(max_length=1250, null=True, default=None)
     github_url = models.CharField(max_length=1250, null=True, default=None)
 

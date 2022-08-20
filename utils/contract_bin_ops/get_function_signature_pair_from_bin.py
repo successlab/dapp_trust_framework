@@ -15,9 +15,16 @@ def readFunSigs():
     while funSigs_line_no < len(Code_lines):
         if Code_lines[funSigs_line_no] == "STOP":
             break
-        if Code_lines[funSigs_line_no].startswith("PUSH4") and Code_lines[funSigs_line_no + 1] == "EQ":
+        if (
+            Code_lines[funSigs_line_no].startswith("PUSH4")
+            and Code_lines[funSigs_line_no + 1] == "EQ"
+        ):
             funSigs.append(
-                [Code_lines[funSigs_line_no].split()[1], int(Code_lines[funSigs_line_no + 2].split()[1], 16)])
+                [
+                    Code_lines[funSigs_line_no].split()[1],
+                    int(Code_lines[funSigs_line_no + 2].split()[1], 16),
+                ]
+            )
         funSigs_line_no += 1
     return funSigs
     pass
@@ -31,7 +38,7 @@ def readFunBody(fun_sig_jump_line_no):
             break
         else:
             fun_stop_line_no = fun_stop_line_no + 1
-    fun_body = Code_lines[fun_start_line_no:fun_stop_line_no + 1]
+    fun_body = Code_lines[fun_start_line_no : fun_stop_line_no + 1]
     return fun_body
 
 
@@ -39,7 +46,9 @@ def readSegs(fun_body):
     code_segs_line_no = []
     n = 0
     while n < len(fun_body):
-        if fun_body[n].startswith("PUSH2") and (fun_body[n + 1] == "JUMPI" or fun_body[n + 1] == "JUMP"):
+        if fun_body[n].startswith("PUSH2") and (
+            fun_body[n + 1] == "JUMPI" or fun_body[n + 1] == "JUMP"
+        ):
             code_segs_line_no.append(int(fun_body[n].split()[1], 16))
         n = n + 1
     code_segs_bodys = []
@@ -56,7 +65,7 @@ def readCodeSeg(code_jump_line_no):
             break
         else:
             seg_JUMP_line_no = seg_JUMP_line_no + 1
-    return Code_lines[seg_start_line_no:seg_JUMP_line_no + 1]
+    return Code_lines[seg_start_line_no : seg_JUMP_line_no + 1]
     pass
 
 
@@ -82,7 +91,11 @@ def clearLines(lines):
     runtime_part_line_no = 0
     for line_no in range(len(Code_lines)):
         line = Code_lines[line_no]
-        if line == "CODECOPY" and Code_lines[line_no + 1] == "PUSH1 0x00" and Code_lines[line_no + 2] == "RETURN":
+        if (
+            line == "CODECOPY"
+            and Code_lines[line_no + 1] == "PUSH1 0x00"
+            and Code_lines[line_no + 2] == "RETURN"
+        ):
             if Code_lines[line_no + 3] == "STOP":
                 runtime_part_line_no = line_no + 4
             else:
@@ -110,7 +123,7 @@ def solve_file(bin_dir, bin_item):
     global args
     if not os.path.exists("./sig"):
         os.mkdir("./sig")
-    disam_data_lines = os.popen('evm disasm ' + bin_dir + "/" + bin_item).readlines()
+    disam_data_lines = os.popen("evm disasm " + bin_dir + "/" + bin_item).readlines()
     Code_lines.clear()
     Jump_table.clear()
     try:
@@ -154,23 +167,37 @@ def solve_dir(dir):
 def main():
     global args
     parser = argparse.ArgumentParser()
-    group = parser.add_argument_group('Model 1')
+    group = parser.add_argument_group("Model 1")
     groupex = group.add_mutually_exclusive_group(required=True)
 
-    groupex.add_argument("-c", "--contract", type=str, dest="contract",
-                         help="set the contract name whose function signature pair will be calculated")
-    groupex.add_argument("-a", "--all", help="handle all contracts in directory specified by option '--bin_dir'",
-                         action="store_true")
+    groupex.add_argument(
+        "-c",
+        "--contract",
+        type=str,
+        dest="contract",
+        help="set the contract name whose function signature pair will be calculated",
+    )
+    groupex.add_argument(
+        "-a",
+        "--all",
+        help="handle all contracts in directory specified by option '--bin_dir'",
+        action="store_true",
+    )
     groupex2 = group.add_mutually_exclusive_group(required=True)
-    groupex2.add_argument("-bd", "--bin_dir", type=str, dest="bin_dir",
-                          help="set the contracts' bin directory where to get function signature pair")
+    groupex2.add_argument(
+        "-bd",
+        "--bin_dir",
+        type=str,
+        dest="bin_dir",
+        help="set the contracts' bin directory where to get function signature pair",
+    )
     args = parser.parse_args()
     if args.contract:
         if args.contract.find("."):
             args.contract = args.contract.split(".")[0] + ".bin"
     if args.bin_dir:
         if args.bin_dir[-1] == "/":
-            args.bin_dir = args.bin_dir[:len(args.bin_dir) - 1]
+            args.bin_dir = args.bin_dir[: len(args.bin_dir) - 1]
     if not args.all:
         solve_file(args.bin_dir, args.contract)
     else:

@@ -6,8 +6,8 @@ from pyquery import PyQuery as pq
 
 import excelUtil
 
-url = r'https://etherscan.io/contractsVerified'
-code_url = r'https://etherscan.io/address/'
+url = r"https://etherscan.io/contractsVerified"
+code_url = r"https://etherscan.io/address/"
 
 
 def getContracts(table):
@@ -18,7 +18,7 @@ def getContractSourceCode(dom, contractName):
     source_code = dom("#dividcode")(".js-sourcecopyarea").text()
     # print(type(source_code))
     source_code.replace("&gt;", ">").replace("&lt;", "<")
-    file_path = r'verified_contracts/' + contractName + ".sol"
+    file_path = r"verified_contracts/" + contractName + ".sol"
     # if os.path.exists(file_path):
     #     return None
     print(file_path)
@@ -34,7 +34,7 @@ def getContractAbi(dom, contractName):
     abi = dom("#dividcode")("#js-copytextarea2")
     if abi.text() is None or len(abi.text()) == 0:
         return None
-    file_path = r'verified_contract_abis/' + contractName + ".abi"
+    file_path = r"verified_contract_abis/" + contractName + ".abi"
     # if os.path.exists(file_path):
     #     return None
     print(file_path)
@@ -51,7 +51,7 @@ def getContractBin(dom, contractName):
         bin = dom("#dividcode")("#verifiedbytecode2")
         if bin.text() is None or len(bin.text()) == 0:
             return None
-        file_path = r'verified_contract_bins/' + contractName + ".bin"
+        file_path = r"verified_contract_bins/" + contractName + ".bin"
         # if os.path.exists(file_path):
         #     return None
         print(file_path)
@@ -76,11 +76,17 @@ def getContractConstructorParams(dom, contractName):
         # print(constructor.text())
         if constructor.text() is None or len(constructor.text()) == 0:
             return None
-        file_path = r'verified_contract_constructorparams/' + contractName + ".constructorparams"
+        file_path = (
+            r"verified_contract_constructorparams/"
+            + contractName
+            + ".constructorparams"
+        )
         print(file_path)
         out = open(file_path, "w+")
         txt = [constructor.text().split("-----Decoded View---------------")[0]]
-        txt.extend(constructor.text().split("-----Decoded View---------------")[1].split("Arg"))
+        txt.extend(
+            constructor.text().split("-----Decoded View---------------")[1].split("Arg")
+        )
         txt = "\n".join(txt)
         print(txt)
         out.write(txt)
@@ -114,7 +120,7 @@ def getCode(contract):
 def getPage(index):
     hurl = url
     if index != 1:
-        hurl = url + r'/' + str(index)
+        hurl = url + r"/" + str(index)
     page = requests.get(hurl)
     dom = pq(page.text)
     tableNode = dom(".container")(".row").eq(2)("table")
@@ -157,16 +163,21 @@ def getPageInfo(url):
     page = requests.get(hurl)
     dom = pq(page.text)
     profile = dom(".container")(".row").eq(1)
-    regex = re.compile(r'A Total Of (\d+) verified contract source codes found')
+    regex = re.compile(r"A Total Of (\d+) verified contract source codes found")
     totalInfo = profile.children(".col-md-6").eq(0).children("span").eq(1)
     m = regex.match(totalInfo.text())
     totalCount = 0
     if m:
         totalCount = m.group(1)
         print(m.group(1))
-    lastHref = profile.children(".col-md-6").eq(1)("#ContentPlaceHolder1_HyperLinkLast").eq(0).attr("href")
+    lastHref = (
+        profile.children(".col-md-6")
+        .eq(1)("#ContentPlaceHolder1_HyperLinkLast")
+        .eq(0)
+        .attr("href")
+    )
     print(lastHref)
-    lastregex = re.compile(r'contractsVerified/(\d+)')
+    lastregex = re.compile(r"contractsVerified/(\d+)")
     m = lastregex.match(lastHref)
     pageSize = 0
     if m:
@@ -222,7 +233,7 @@ def clearEmptyFile(dir):
     items = os.listdir(dir)
     for item in items:
         print(item)
-        file_path = dir + r'/' + item
+        file_path = dir + r"/" + item
         with open(file_path, "r") as f:
             if len(f.read()) == 0:
                 print(file_path)
@@ -233,15 +244,19 @@ def clearEmptyFile(dir):
 
 # def start3():
 def clearEmpty():
-    dirs = [r'./verified_contracts', r'./verified_contract_abis', r'./verified_contract_bins',
-            r'./verified_contract_constructorparams']
+    dirs = [
+        r"./verified_contracts",
+        r"./verified_contract_abis",
+        r"./verified_contract_bins",
+        r"./verified_contract_constructorparams",
+    ]
     for dir in dirs:
         clearEmptyFile(dir)
     pass
 
 
 def getContracts():
-    contracts = excelUtil.excel_table_byname("智能合约.xls", by_name='Verified Contracts')
+    contracts = excelUtil.excel_table_byname("智能合约.xls", by_name="Verified Contracts")
 
     # for contract in contracts:
     #     print(contract)
@@ -271,7 +286,7 @@ def getFiles(path):
 
 
 def start5():
-    dir = r'./verified_contracts'
+    dir = r"./verified_contracts"
     files = getFiles(dir)
     print(len(files))
     pass
