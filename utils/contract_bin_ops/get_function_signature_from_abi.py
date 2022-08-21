@@ -3,7 +3,7 @@ import os
 import re
 import sys
 
-import demjson
+import demjson3
 
 if sys.version_info < (3, 6):
     import sha3
@@ -29,7 +29,7 @@ def getAbi(file_path):
     with open(file_path, "r") as f:
         data = f.read()
         f.close()
-        abi = demjson.decode(data, "utf-8")
+        abi = demjson3.decode(data, "utf-8")
         return abi
 
 
