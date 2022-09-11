@@ -132,6 +132,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Github cookie
 try:
     from secrets.cookies import github_cookie
+
     cookie_to_add = github_cookie
     GITHUB_COOKIE = cookie_to_add
 
