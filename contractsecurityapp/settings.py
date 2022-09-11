@@ -21,7 +21,7 @@ ALLOWED_HOSTS = ["*"]
 Environment Types
 Local, CI, Test, Prod
 """
-env_type = os.environ["ENV_TYPE"]
+ENV_TYPE = os.environ["ENV_TYPE"]
 
 # Application definition
 
