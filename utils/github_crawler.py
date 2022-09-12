@@ -6,8 +6,7 @@ from utils.crawler_ops.content_ops import (
     get_max_pagecount,
     get_contract_users_and_repos,
 )
-from utils.crawler_ops.fetching.search_results import \
-    get_github_search_results_page
+from utils.crawler_ops.fetching.search_results import get_github_search_results_page
 
 from contract_relations.models import *
 
