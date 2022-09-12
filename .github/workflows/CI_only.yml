@@ -27,5 +27,6 @@ jobs:
       env:
         ENV_TYPE: CI
         GHUB_COOKIE: ${{secrets.GHUB_COOKIE}}
+        INFURA_KEY_URL: ${{secrets.INFURA_KEY_URL}}
       run: |
         python manage.py test
