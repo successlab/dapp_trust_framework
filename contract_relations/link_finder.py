@@ -4,8 +4,8 @@ from utils.extractors.geth_node_extractor import get_contract_bin
 from utils.extractors.etherscan_extractor import get_contract_abi
 
 def get_code_links(address):
-    bytecode = get_contract_bin(address)
-    opcode_instructions = get_opcode(bytecode).hex()
+    bytecode = get_contract_bin(address).hex()
+    opcode_instructions = get_opcode(bytecode)
     code_link_addresses = get_external_addresses(opcode_instructions)
     return list(code_link_addresses)
 
