@@ -1,4 +1,5 @@
 from utils.bytecode_analyzers.bytecode_to_opcode import get_opcode
+from utils.extractors.geth_node_extractor import get_contract_bin
 
 
 def get_external_addresses(instructions_lst):
@@ -15,7 +16,10 @@ def get_external_addresses(instructions_lst):
         instruction_type = instruction_components[2]
 
         if instruction_type == "PUSH20":
-            address_val = instruction_components[3].split(":")[1]
+            try:
+                address_val = instruction_components[3].split(":")[1]
+            except:
+                continue
             if address_val != "0xffffffffffffffffffffffffffffffffffffffff":
                 external_addresses.add(address_val)
 
