@@ -14,7 +14,11 @@ def get_attribute_links(address):
 
 def get_addresses_in_storage(contract_address, storage_locations):
     attribute_addresses = set()
-    w3 = Web3(Web3.HTTPProvider(settings.WEB3_HTTP_PROVIDER))
+
+    try:
+        w3 = Web3(Web3.HTTPProvider(settings.WEB3_HTTP_PROVIDER))
+    except:
+        w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/abf2599d4d184669936ee3d302f8ce67'))
 
     for storage_location in storage_locations:
         stored_val = w3.toHex(
