@@ -126,13 +126,27 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 try:
     from secrets.cookies import github_cookie
 
-    cookie_to_add = github_cookie
-    GITHUB_COOKIE = cookie_to_add
+    header_to_read = github_cookie
+    GITHUB_COOKIE = header_to_read
 
 except Exception as e:
     read_cookie = os.environ["GHUB_COOKIE"]
     print("Env Type: " + os.environ["ENV_TYPE"])
     print("Cookie read from the env: " + read_cookie)
+    # cookie_to_add = json.loads(os.environ["GHUB_COOKIE"])
+
+
+# Github header
+try:
+    from secrets.cookies import github_header
+
+    header_to_read = github_header
+    GITHUB_HEADER = header_to_read
+
+except Exception as e:
+    read_header = os.environ["GITHUB_HEADER"]
+    print("Env Type: " + os.environ["ENV_TYPE"])
+    print("Header read from the env: " + read_header)
     # cookie_to_add = json.loads(os.environ["GHUB_COOKIE"])
 
 # GITHUB_COOKIE = cookie_to_add

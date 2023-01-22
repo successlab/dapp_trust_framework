@@ -30,7 +30,7 @@ def write_search_results_into_db(results, parent_contract_address):
 
 def get_github_search_results(contract_address):
     search_results_content = get_github_search_results_page(
-        contract_address, settings.GITHUB_COOKIE
+        contract_address, settings.GITHUB_HEADER
     )
     lang_counts = usage_stats(search_results_content)
     print("Overall usage scoare: ", get_overall_usage_score(lang_counts))
