@@ -40,3 +40,24 @@ def get_github_search_results(contract_address):
     code_search_results = get_contract_users_and_repos(search_results_content)
     print("Code search results: ", code_search_results)
     return code_search_results
+
+def get_github_all_code_search_results(contract_address):
+    search_results_content = get_github_search_results_page(
+        contract_address, settings.GITHUB_HEADER
+    )
+    code_search_results = get_contract_users_and_repos(search_results_content)
+    max_pagecount = get_max_pagecount(search_results_content)
+
+    if max_pagecount > 1:
+        page = 2
+
+        for i in range(page, max_pagecount + 1):
+            search_results_content = get_github_search_results_page(
+                contract_address, settings.GITHUB_HEADER, page_number=i
+            )
+            code_search_results = get_contract_users_and_repos(search_results_content, code_search_results)
+
+    for k, v in code_search_results.items():
+        code_search_results[k] = list(set(v))
+
+    return code_search_results

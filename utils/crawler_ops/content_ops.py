@@ -30,7 +30,9 @@ def get_max_pagecount(search_results_content):
     return int(paginator.find_all("a")[-2].text)
 
 
-def get_contract_users_and_repos(search_results_content, users_and_repos_mapping={}):
+def get_contract_users_and_repos(search_results_content, users_and_repos_mapping=None):
+    if users_and_repos_mapping is None:
+        users_and_repos_mapping = {}
     response_soup = BeautifulSoup(search_results_content, "html.parser")
 
     code_search_results = response_soup.find(
