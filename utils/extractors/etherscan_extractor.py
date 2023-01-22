@@ -22,6 +22,6 @@ def get_contract_abi(address):
     )
     response = requests.get(api_endpoint + address)
     response_json = response.json()
-    abi = json.loads(response_json["result"])
+    abi = response_json["result"][0]["ABI"]
 
     return abi
