@@ -215,3 +215,4 @@ GitHub.sublime-settings
 .history
 
 *.DS_Store
+/pycharm_test_conf.txt
