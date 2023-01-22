@@ -22,3 +22,23 @@ def get_github_search_results_page(contract_address, github_header, page_number=
     )
 
     return response.content
+
+
+def get_repo_search_results_page(user, repo, language=None, page_number=None):
+    params = {}
+
+    if language is not None:
+        params["l"] = language
+    if page_number is not None:
+        params["p"] = page_number
+
+    url = f"https://github.com/{user}/{repo}/"
+    if len(params) != 0:
+        url += "search?"
+
+    for k, v in params.items():
+        url += k + "=" + str(v) + "&"
+
+    response = requests.get(url)
+
+    return response.content
