@@ -1,7 +1,7 @@
 from django.test import TestCase
-from utils.github_crawler import get_github_search_results, get_github_all_code_search_results
-from utils.crawler_ops.fetching.search_results import get_repo_search_results_page
-from utils.crawler_ops.content_ops import get_max_pagecount, get_repo_code_links
+from utils.github_crawler import get_github_search_results, get_github_all_code_search_results, check_web3js_usage, \
+    check_web3js_usage_parallel
+from utils.crawler_ops.fetching.code_extractor import get_all_code_files, clean_links, download_code
 
 # Create your tests here.
 class TestGithubSearch(TestCase):
@@ -18,9 +18,10 @@ class TestGithubSearch(TestCase):
         print(res)
 
     def test_code_fetching(self):
-        res = get_repo_search_results_page(
-            "surajsjain",
-            "cryptopay-web",
-            language="Python",
-        )
-        get_repo_code_links(res)
+        search_address = "0xe34139463bA50bD61336E0c446Bd8C0867c6fE65"
+        res = get_github_all_code_search_results(search_address)
+
+        found_web3js_import, found_metamask_trigger, web3js_uses = check_web3js_usage_parallel(res)
+        print("found_web3js_import: ", found_web3js_import)
+        print("found_metamask_trigger: ", found_metamask_trigger)
+        print("web3js_uses: ", web3js_uses)
