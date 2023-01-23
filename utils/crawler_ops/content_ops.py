@@ -30,7 +30,9 @@ def get_max_pagecount(search_results_content):
     return int(paginator.find_all("a")[-2].text)
 
 
-def get_contract_users_and_repos(search_results_content, users_and_repos_mapping={}):
+def get_contract_users_and_repos(search_results_content, users_and_repos_mapping=None):
+    if users_and_repos_mapping is None:
+        users_and_repos_mapping = {}
     response_soup = BeautifulSoup(search_results_content, "html.parser")
 
     code_search_results = response_soup.find(
@@ -48,3 +50,24 @@ def get_contract_users_and_repos(search_results_content, users_and_repos_mapping
             users_and_repos_mapping[user] = [repo]
 
     return users_and_repos_mapping
+
+
+def get_repo_code_links(search_results_content, code_links=None):
+    if code_links is None:
+        code_links = []
+
+    response_soup = BeautifulSoup(search_results_content, "html.parser")
+    search_results = response_soup.find(
+        "div", class_="code-list"
+    )
+
+    try:
+        link_elements = search_results.find_all("a")
+
+        for link_element in link_elements:
+            code_links.append(link_element.get('href'))
+
+        return code_links
+
+    except Exception:
+        return []
