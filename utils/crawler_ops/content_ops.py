@@ -60,9 +60,14 @@ def get_repo_code_links(search_results_content, code_links=None):
     search_results = response_soup.find(
         "div", class_="code-list"
     )
-    link_elements = search_results.find_all("a")
 
-    for link_element in link_elements:
-        code_links.append(link_element.get('href'))
+    try:
+        link_elements = search_results.find_all("a")
 
-    return code_links
+        for link_element in link_elements:
+            code_links.append(link_element.get('href'))
+
+        return code_links
+
+    except Exception:
+        return []
