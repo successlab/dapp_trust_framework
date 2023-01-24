@@ -152,3 +152,4 @@ except Exception as e:
 
 # GITHUB_COOKIE = cookie_to_add
 WEB3_HTTP_PROVIDER = os.environ["INFURA_KEY_URL"]
+ETHERSCAN_API_KEY = os.environ["ETHERSCAN_API_KEY"]
