@@ -3,6 +3,7 @@ from utils.github_crawler import get_github_search_results, get_github_all_code_
     check_web3js_usage_parallel
 from utils.crawler_ops.fetching.code_extractor import get_all_code_files, clean_links, download_code
 
+
 # Create your tests here.
 class TestGithubSearch(TestCase):
     def test_one_page_search(self):
