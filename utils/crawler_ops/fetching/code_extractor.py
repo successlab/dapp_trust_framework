@@ -43,7 +43,7 @@ def clean_links(repo_code_links):
     for link in repo_code_links:
         cleaned_link = link.replace("blob/", "")
         cleaned_links.append(
-            "https://raw.githubusercontent.com/" + cleaned_link
+            "https://raw.githubusercontent.com" + cleaned_link
         )
 
     return cleaned_links
