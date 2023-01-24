@@ -1,5 +1,6 @@
-import requests
 import re
+
+import requests
 
 from utils.crawler_ops.content_ops import get_repo_code_links, get_max_pagecount
 from utils.crawler_ops.fetching.search_results import get_repo_search_results_page
@@ -43,7 +44,7 @@ def clean_links(repo_code_links):
     for link in repo_code_links:
         cleaned_link = link.replace("blob/", "")
         cleaned_links.append(
-            "https://raw.githubusercontent.com/" + cleaned_link
+            "https://raw.githubusercontent.com" + cleaned_link
         )
 
     return cleaned_links

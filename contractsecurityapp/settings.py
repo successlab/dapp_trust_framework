@@ -1,10 +1,9 @@
-from pathlib import Path
-import os
 import json
+import os
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -37,6 +36,7 @@ INSTALLED_APPS = [
     "rest_framework",
     # Custom apps
     "contract_relations.apps.ContractRelationsConfig",
+    "web3js_trust.apps.Web3JsTrustConfig",
 ]
 
 MIDDLEWARE = [
@@ -69,7 +69,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "contractsecurityapp.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -79,7 +78,6 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -99,7 +97,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -110,7 +107,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -135,7 +131,6 @@ except Exception as e:
     print("Cookie read from the env: " + read_cookie)
     # cookie_to_add = json.loads(os.environ["GHUB_COOKIE"])
 
-
 # Github header
 try:
     from secrets.cookies import github_header
@@ -151,3 +146,4 @@ except Exception as e:
 
 # GITHUB_COOKIE = cookie_to_add
 WEB3_HTTP_PROVIDER = os.environ["INFURA_KEY_URL"]
+ETHERSCAN_API_KEY = os.environ["ETHERSCAN_API_KEY"]

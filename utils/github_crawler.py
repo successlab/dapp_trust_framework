@@ -1,17 +1,18 @@
+import concurrent.futures
+
 from django.conf import settings
 
-from utils.crawler_ops.fetching.code_extractor import get_all_code_files, clean_links, download_code, is_importing_web3, \
-    is_using_meta_mask
-from utils.statops.github_scoring import get_overall_usage_score
+from contract_relations.models import *
 from utils.crawler_ops.content_ops import (
     usage_stats,
     get_max_pagecount,
     get_contract_users_and_repos,
 )
+from utils.crawler_ops.fetching.code_extractor import get_all_code_files, clean_links, download_code, is_importing_web3, \
+    is_using_meta_mask
 from utils.crawler_ops.fetching.search_results import get_github_search_results_page
+from utils.statops.github_scoring import get_overall_usage_score
 
-from contract_relations.models import *
-import concurrent.futures
 
 def write_search_results_into_db(results, parent_contract_address):
     if len(Contract.objects.filter(address=parent_contract_address)) == 0:
@@ -140,7 +141,9 @@ def check_web3js_usage_parallel(code_search_results):
     found_metamask_trigger = False
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future_to_link = {executor.submit(process_link, k, repo, link): (k, repo, link) for k, v in code_search_results.items() for repo in v for link in clean_links(get_all_code_files(k, repo, languages=["JavaScript", "TypeScript"]))}
+        future_to_link = {executor.submit(process_link, k, repo, link): (k, repo, link) for k, v in
+                          code_search_results.items() for repo in v for link in
+                          clean_links(get_all_code_files(k, repo, languages=["JavaScript", "TypeScript"]))}
         for future in concurrent.futures.as_completed(future_to_link):
             user, repo, link = future_to_link[future]
             try:

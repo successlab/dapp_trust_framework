@@ -197,7 +197,7 @@ def decode(hexcode, mode):
 def get_opcode(bytecode):
     mode = "int:hex" if len(sys.argv) < 2 else sys.argv[1]
     hexcode = bytecode
-    opcodes_str = decode([hexcode[i : i + 2] for i in range(2, len(hexcode), 2)], mode)
+    opcodes_str = decode([hexcode[i: i + 2] for i in range(2, len(hexcode), 2)], mode)
     opcodes_lst = opcodes_str.split("\n")
     return opcodes_lst
 

@@ -1,5 +1,5 @@
-from web3 import Web3
 from django.conf import settings
+from web3 import Web3
 
 from utils.bytecode_analyzers.bytecode_to_opcode import get_opcode
 from utils.extractors.geth_node_extractor import get_contract_bin
@@ -11,6 +11,7 @@ def get_attribute_links(address):
     instructions = get_opcode(bytecode)
     storage_locations = get_storage_locations(instructions)
     return get_addresses_in_storage(address, storage_locations)
+
 
 def get_addresses_in_storage(contract_address, storage_locations):
     attribute_addresses = set()
@@ -30,6 +31,7 @@ def get_addresses_in_storage(contract_address, storage_locations):
 
     return list(attribute_addresses)
 
+
 def get_storage_locations(instructions_lst):
     storage_locations = set()
 
@@ -47,6 +49,7 @@ def get_storage_locations(instructions_lst):
 
     return list(storage_locations)
 
+
 def clean_val(raw_val_string):
     after_ox = raw_val_string.split("0x")[1]
     cleaned_starting_pos = 0
@@ -56,4 +59,3 @@ def clean_val(raw_val_string):
             break
 
     return "0x" + after_ox[cleaned_starting_pos:]
-

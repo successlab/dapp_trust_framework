@@ -77,9 +77,9 @@ def getContractConstructorParams(dom, contractName):
         if constructor.text() is None or len(constructor.text()) == 0:
             return None
         file_path = (
-            r"verified_contract_constructorparams/"
-            + contractName
-            + ".constructorparams"
+                r"verified_contract_constructorparams/"
+                + contractName
+                + ".constructorparams"
         )
         print(file_path)
         out = open(file_path, "w+")
@@ -172,9 +172,9 @@ def getPageInfo(url):
         print(m.group(1))
     lastHref = (
         profile.children(".col-md-6")
-        .eq(1)("#ContentPlaceHolder1_HyperLinkLast")
-        .eq(0)
-        .attr("href")
+            .eq(1)("#ContentPlaceHolder1_HyperLinkLast")
+            .eq(0)
+            .attr("href")
     )
     print(lastHref)
     lastregex = re.compile(r"contractsVerified/(\d+)")

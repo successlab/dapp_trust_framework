@@ -26,10 +26,11 @@ def get_external_addresses_in_code(instructions_lst):
 
     return external_addresses
 
+
 if __name__ == "__main__":
     address = '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9'
     bytecode = str(get_contract_bin(address).hex())
     instructions = get_opcode(bytecode)
     external_addresses = get_external_addresses_in_code(instructions)
     print("\nAddresses explicitly defined in code: ", external_addresses)
-    print("\nAddresses pointed by the attributes in the contract: ",get_attribute_links(address))
+    print("\nAddresses pointed by the attributes in the contract: ", get_attribute_links(address))

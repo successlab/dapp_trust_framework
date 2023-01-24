@@ -99,11 +99,11 @@ def excel_table_byindex(file="file.xls", colnameindex=0, by_index=0):
                 if type(row[i]) == str:
                     app[colnames[i].strip()] = (
                         row[i]
-                        .strip()
-                        .replace("\r\n", "")
-                        .replace("\n", " ")
-                        .replace("\r", "")
-                        .replace(" ", "")
+                            .strip()
+                            .replace("\r\n", "")
+                            .replace("\n", " ")
+                            .replace("\r", "")
+                            .replace(" ", "")
                     )
                 else:
                     app[colnames[i].strip()] = str(row[i])
@@ -137,11 +137,11 @@ def excel_table_byname(file="file.xls", colnameindex=0, by_name="Sheet1"):
                 if type(row[i]) == str:
                     app[colnames[i].strip()] = (
                         row[i]
-                        .strip()
-                        .replace("\r\n", "")
-                        .replace("\n", " ")
-                        .replace("\r", "")
-                        .replace(" ", "")
+                            .strip()
+                            .replace("\r\n", "")
+                            .replace("\n", " ")
+                            .replace("\r", "")
+                            .replace(" ", "")
                     )
                 else:
                     app[colnames[i].strip()] = str(row[i])
