@@ -1,7 +1,7 @@
-from web3 import Web3
-from hexbytes import HexBytes
-
 from django.conf import settings
+from hexbytes import HexBytes
+from web3 import Web3
+
 
 def is_contract(address):
     w3 = Web3(Web3.HTTPProvider(settings.WEB3_HTTP_PROVIDER))
@@ -11,6 +11,7 @@ def is_contract(address):
         return False
     else:
         return True
+
 
 def is_valid_eth_address(address):
     w3 = Web3(Web3.HTTPProvider(settings.WEB3_HTTP_PROVIDER))

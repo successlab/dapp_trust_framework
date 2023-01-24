@@ -1,5 +1,5 @@
-from web3 import Web3
 from django.conf import settings
+from web3 import Web3
 
 
 def get_contract_bin(address):

@@ -1,5 +1,6 @@
-import requests
 import json
+
+import requests
 
 
 def get_all_contract_props(address):

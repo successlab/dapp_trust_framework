@@ -1,7 +1,7 @@
 from django.test import TestCase
-from utils.github_crawler import get_github_search_results, get_github_all_code_search_results, check_web3js_usage, \
+
+from utils.github_crawler import get_github_search_results, get_github_all_code_search_results, \
     check_web3js_usage_parallel
-from utils.crawler_ops.fetching.code_extractor import get_all_code_files, clean_links, download_code
 
 
 # Create your tests here.

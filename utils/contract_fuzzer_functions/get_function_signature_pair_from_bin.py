@@ -16,8 +16,8 @@ def readFunSigs():
         if Code_lines[funSigs_line_no] == "STOP":
             break
         if (
-            Code_lines[funSigs_line_no].startswith("PUSH4")
-            and Code_lines[funSigs_line_no + 1] == "EQ"
+                Code_lines[funSigs_line_no].startswith("PUSH4")
+                and Code_lines[funSigs_line_no + 1] == "EQ"
         ):
             funSigs.append(
                 [
@@ -38,7 +38,7 @@ def readFunBody(fun_sig_jump_line_no):
             break
         else:
             fun_stop_line_no = fun_stop_line_no + 1
-    fun_body = Code_lines[fun_start_line_no : fun_stop_line_no + 1]
+    fun_body = Code_lines[fun_start_line_no: fun_stop_line_no + 1]
     return fun_body
 
 
@@ -47,7 +47,7 @@ def readSegs(fun_body):
     n = 0
     while n < len(fun_body):
         if fun_body[n].startswith("PUSH2") and (
-            fun_body[n + 1] == "JUMPI" or fun_body[n + 1] == "JUMP"
+                fun_body[n + 1] == "JUMPI" or fun_body[n + 1] == "JUMP"
         ):
             code_segs_line_no.append(int(fun_body[n].split()[1], 16))
         n = n + 1
@@ -65,7 +65,7 @@ def readCodeSeg(code_jump_line_no):
             break
         else:
             seg_JUMP_line_no = seg_JUMP_line_no + 1
-    return Code_lines[seg_start_line_no : seg_JUMP_line_no + 1]
+    return Code_lines[seg_start_line_no: seg_JUMP_line_no + 1]
     pass
 
 
@@ -92,9 +92,9 @@ def clearLines(lines):
     for line_no in range(len(Code_lines)):
         line = Code_lines[line_no]
         if (
-            line == "CODECOPY"
-            and Code_lines[line_no + 1] == "PUSH1 0x00"
-            and Code_lines[line_no + 2] == "RETURN"
+                line == "CODECOPY"
+                and Code_lines[line_no + 1] == "PUSH1 0x00"
+                and Code_lines[line_no + 2] == "RETURN"
         ):
             if Code_lines[line_no + 3] == "STOP":
                 runtime_part_line_no = line_no + 4

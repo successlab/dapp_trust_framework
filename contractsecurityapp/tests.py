@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from utils.etherscan_utils import fetch_abi
 from utils.github_crawler import get_github_all_code_search_results, check_web3js_usage_parallel
 

@@ -1,7 +1,8 @@
+import json
+
 import requests
 from django.conf import settings
 from web3 import Web3
-import json
 
 
 def fetch_abi(contract_address):
@@ -17,4 +18,3 @@ def fetch_abi(contract_address):
     abi = json.loads(abi)
 
     return abi
-
