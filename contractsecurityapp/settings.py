@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "rest_framework",
     # Custom apps
     "contract_relations.apps.ContractRelationsConfig",
+    "web3js_trust.apps.Web3JsTrustConfig",
 ]
 
 MIDDLEWARE = [
