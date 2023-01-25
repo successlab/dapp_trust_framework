@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 from math import ceil
+import concurrent.futures
 
 import logging
 logger = logging.getLogger(__name__)
@@ -52,6 +53,28 @@ def process_and_save(df, out_csvs_dir_path, part_num):
     df.to_csv(out_csvs_dir_path + "part_" + str(part_num) + ".csv", index=False)
 
 
+def process_and_save_parallel(df, out_csvs_dir_path, part_num):
+    df['web3js_uses'] = pd.Series(dtype='object')
+    df['all_github_code_search_results'] = pd.Series(dtype='object')
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # Use the executor.submit() method to schedule the get_w3js_use() function to be
+        # executed by a worker thread, passing in the appropriate arguments.
+        future_to_address = {executor.submit(get_w3js_use, df.iat[i, df.columns.get_loc("Address")]): i for i in range(len(df))}
+        for future in concurrent.futures.as_completed(future_to_address):
+            i = future_to_address[future]
+            try:
+                resp = future.result()
+                web3js_uses = resp["web3js_uses"]
+                all_github_code_search_results = resp["all_github_code_search_results"]
+                df.iat[i, df.columns.get_loc("web3js_uses")] = web3js_uses
+                df.iat[i, df.columns.get_loc("all_github_code_search_results")] = all_github_code_search_results
+            except Exception as e:
+                logger.error("Error with address %s: %s", df.iat[i, df.columns.get_loc("Address")], e)
+
+    df.to_csv(out_csvs_dir_path + "part_" + str(part_num) + ".csv", index=False)
+
+
 def write_into_dataset(in_csv_path, out_csvs_dir_path, data_length=1586, chunk_size=50):
     base_df_col_names = [
         'Address',
@@ -81,7 +104,8 @@ def write_into_dataset(in_csv_path, out_csvs_dir_path, data_length=1586, chunk_s
         else:
             df = pd.read_csv(in_csv_path, skiprows=(i * chunk_size), nrows=chunk_size, names=base_df_col_names, header=None)
 
-        process_and_save(df, out_csvs_dir_path, i)
+        # process_and_save(df, out_csvs_dir_path, i)
+        process_and_save_parallel(df, out_csvs_dir_path, i)
         del df
 
         logger.info("Finished processing chunk " + str(i))
