@@ -120,7 +120,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Github cookie
 try:
-    from secrets.cookies import github_cookie
+    from app_secrets.cookies import github_cookie
 
     header_to_read = github_cookie
     GITHUB_COOKIE = header_to_read
@@ -133,7 +133,7 @@ except Exception as e:
 
 # Github header
 try:
-    from secrets.cookies import github_header
+    from app_secrets.cookies import github_header
 
     header_to_read = github_header
     GITHUB_HEADER = header_to_read

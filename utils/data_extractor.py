@@ -1,0 +1,92 @@
+import requests
+import pandas as pd
+from math import ceil
+
+import logging
+logger = logging.getLogger(__name__)
+
+
+def get_w3js_use(eth_address):
+    # cookies = {
+    #     'csrftoken': 'nMuzkziT2RUPVhHP9mee0Fmo2AfE7GsrohaT8F5SLtsSncaAa22Yi9dTtIuD9tFe',
+    # }
+
+    headers = {
+        'Content-Type': 'application/json',
+        # 'Cookie': 'csrftoken=nMuzkziT2RUPVhHP9mee0Fmo2AfE7GsrohaT8F5SLtsSncaAa22Yi9dTtIuD9tFe',
+    }
+
+    json_data = {
+        'address': eth_address,
+    }
+
+    response = requests.get('http://localhost:8000/web3jstrust/web3js_stats/', headers=headers, json=json_data)
+
+    # Note: json_data will not be serialized by requests
+    # exactly as it was in the original request.
+    #data = '{\n    "address": "0xe34139463bA50bD61336E0c446Bd8C0867c6fE65"\n}'
+    #response = requests.get('http://localhost:8000/web3jstrust/web3js_stats/', cookies=cookies, headers=headers, data=data)
+
+    return response.json()
+
+
+def process_and_save(df, out_csvs_dir_path, part_num):
+    df['web3js_uses'] = pd.Series(dtype='object')
+    df['all_github_code_search_results'] = pd.Series(dtype='object')
+
+    for i in range(len(df)):
+        eth_address = df.iat[i, df.columns.get_loc("Address")]
+        resp = get_w3js_use(eth_address)
+
+        try:
+            web3js_uses = resp["web3js_uses"]
+            all_github_code_search_results = resp["all_github_code_search_results"]
+
+            df.iat[i, df.columns.get_loc("web3js_uses")] = web3js_uses
+            df.iat[i, df.columns.get_loc("all_github_code_search_results")] = all_github_code_search_results
+
+        except:
+            pass
+
+
+    df.to_csv(out_csvs_dir_path + "part_" + str(part_num) + ".csv", index=False)
+
+
+def write_into_dataset(in_csv_path, out_csvs_dir_path, data_length=1586, chunk_size=50):
+    base_df_col_names = [
+        'Address',
+        'Name',
+        'Label',
+        'six_months_txs_raw',
+        'n_transactions',
+        'avg_trx_freq',
+        'avg_sender_nonce',
+        'avg_gas_price',
+        'avg_gas_consumed',
+        'median_trx_freq',
+        'median_sender_nonce',
+        'median_gas_price',
+        'median_gas_consumed',
+        'returning_user_perc',
+        'n_unique_incoming_addresses',
+        'n_deployer_transactions'
+    ]
+
+    limit = int(ceil(data_length/chunk_size))
+    i = 0
+    for i in range(limit):
+        logger.info("Processing Chunk " + str(i))
+        if i == 0:
+            df = pd.read_csv(in_csv_path, skiprows=(i * chunk_size), nrows=chunk_size)
+        else:
+            df = pd.read_csv(in_csv_path, skiprows=(i * chunk_size), nrows=chunk_size, names=base_df_col_names, header=None)
+
+        process_and_save(df, out_csvs_dir_path, i)
+        del df
+
+        logger.info("Finished processing chunk " + str(i))
+
+    logger.info("Finished running the program")
+
+
+# write_into_dataset("final_combined_df.csv", "./out_chunks/")

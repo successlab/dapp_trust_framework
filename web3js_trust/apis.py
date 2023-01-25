@@ -1,11 +1,14 @@
+import os
 import time
 import logging
 
+from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from utils.basic_web3.address_classifier import *
+from utils.data_extractor import write_into_dataset
 from utils.github_crawler import get_github_all_code_search_results, check_web3js_usage_parallel
 
 
@@ -39,3 +42,13 @@ class CheckWeb3JSStats(APIView):
         }
 
         return Response(out_data)
+
+
+class ExtractData(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        in_csv = os.path.join(settings.BASE_DIR, "final_combined_df.csv")
+        out_chunks_dir = os.path.join(settings.BASE_DIR, "out_chunks/")
+        write_into_dataset(in_csv, out_chunks_dir)
+        return Response({"Message": "Success"})

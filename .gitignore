@@ -216,3 +216,4 @@ GitHub.sublime-settings
 
 *.DS_Store
 /pycharm_test_conf.txt
+/app_secrets/
