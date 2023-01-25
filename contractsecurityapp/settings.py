@@ -18,7 +18,7 @@ ALLOWED_HOSTS = ["*"]
 
 """
 Environment Types
-Local, CI, Test, Prod
+Local, CI, Test, Prod, DataExtraction
 """
 ENV_TYPE = os.environ["ENV_TYPE"]
 
@@ -147,3 +147,24 @@ except Exception as e:
 # GITHUB_COOKIE = cookie_to_add
 WEB3_HTTP_PROVIDER = os.environ["INFURA_KEY_URL"]
 ETHERSCAN_API_KEY = os.environ["ETHERSCAN_API_KEY"]
+
+
+if ENV_TYPE == "DataExtraction":
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': os.path.join(BASE_DIR, 'logs/server.log'),
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['file'],
+                'level': 'DEBUG',
+                'propagate': True,
+            },
+        },
+    }

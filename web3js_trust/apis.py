@@ -1,3 +1,6 @@
+import time
+import logging
+
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -12,6 +15,8 @@ class CheckWeb3JSStats(APIView):
     def get(self, request):
         in_data = request.data
         search_address = in_data["address"]
+        if settings.DEBUG is True and settings.ENV_TYPE == "DataExtraction":
+            logging.info(f'Received address: {search_address} at {time.strftime(" % Y - % m - % d % H: % M: % S")}')
 
         # Checking bad input address
         if is_valid_eth_address(search_address) is False or is_contract(search_address) is False:
