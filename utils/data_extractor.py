@@ -4,31 +4,34 @@ from math import ceil
 import concurrent.futures
 
 import logging
+
+from utils.basic_web3.address_classifier import is_valid_eth_address, is_contract
+from utils.github_crawler import get_github_all_code_search_results, check_web3js_usage_parallel
+
 logger = logging.getLogger(__name__)
 
 
 def get_w3js_use(eth_address):
-    # cookies = {
-    #     'csrftoken': 'nMuzkziT2RUPVhHP9mee0Fmo2AfE7GsrohaT8F5SLtsSncaAa22Yi9dTtIuD9tFe',
-    # }
+    search_address = eth_address
+    if is_valid_eth_address(search_address) is False or is_contract(search_address) is False:
+        return {}
 
-    headers = {
-        'Content-Type': 'application/json',
-        # 'Cookie': 'csrftoken=nMuzkziT2RUPVhHP9mee0Fmo2AfE7GsrohaT8F5SLtsSncaAa22Yi9dTtIuD9tFe',
-    }
+    try:
+        res = get_github_all_code_search_results(search_address)
+        found_web3js_import, found_metamask_trigger, web3js_uses = check_web3js_usage_parallel(res)
 
-    json_data = {
-        'address': eth_address,
-    }
+        out_data = {
+            "status": "successful",
+            "found_web3js_import": found_web3js_import,
+            "found_metamask_trigger": found_metamask_trigger,
+            "web3js_uses": web3js_uses,
+            "all_github_code_search_results": res,
+        }
 
-    response = requests.get('http://localhost:8000/web3jstrust/web3js_stats/', headers=headers, json=json_data)
-
-    # Note: json_data will not be serialized by requests
-    # exactly as it was in the original request.
-    #data = '{\n    "address": "0xe34139463bA50bD61336E0c446Bd8C0867c6fE65"\n}'
-    #response = requests.get('http://localhost:8000/web3jstrust/web3js_stats/', cookies=cookies, headers=headers, data=data)
-
-    return response.json()
+        return out_data
+    
+    except:
+        return {}
 
 
 def process_and_save(df, out_csvs_dir_path, part_num):
@@ -41,14 +44,15 @@ def process_and_save(df, out_csvs_dir_path, part_num):
 
         try:
             web3js_uses = resp["web3js_uses"]
-            all_github_code_search_results = resp["all_github_code_search_results"]
-
             df.iat[i, df.columns.get_loc("web3js_uses")] = web3js_uses
-            df.iat[i, df.columns.get_loc("all_github_code_search_results")] = all_github_code_search_results
-
         except:
             pass
 
+        try:
+            all_github_code_search_results = resp["all_github_code_search_results"]
+            df.iat[i, df.columns.get_loc("all_github_code_search_results")] = all_github_code_search_results
+        except:
+            pass
 
     df.to_csv(out_csvs_dir_path + "part_" + str(part_num) + ".csv", index=False)
 
