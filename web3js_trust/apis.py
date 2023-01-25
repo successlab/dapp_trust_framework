@@ -35,6 +35,7 @@ class CheckWeb3JSStats(APIView):
             "found_web3js_import": found_web3js_import,
             "found_metamask_trigger": found_metamask_trigger,
             "web3js_uses": web3js_uses,
+            "all_github_code_search_results": res,
         }
 
         return Response(out_data)
