@@ -104,7 +104,7 @@ def write_into_dataset(in_csv_path, out_csvs_dir_path, data_length=1586, chunk_s
     limit = int(ceil(data_length/chunk_size))
     i = 0
     for i in range(limit):
-        logger.info("Processing Chunk " + str(i))
+        print("Processing Chunk " + str(i))
         if i == 0:
             df = pd.read_csv(in_csv_path, skiprows=(i * chunk_size), nrows=chunk_size)
         else:
@@ -114,9 +114,9 @@ def write_into_dataset(in_csv_path, out_csvs_dir_path, data_length=1586, chunk_s
         process_and_save(df, out_csvs_dir_path, i)
         del df
 
-        logger.info("Finished processing chunk " + str(i))
+        print("Finished processing chunk " + str(i))
 
-    logger.info("Finished running the program")
+    print("Finished running the program")
 
 
 # write_into_dataset("final_combined_df.csv", "./out_chunks/")
