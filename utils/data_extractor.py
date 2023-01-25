@@ -29,7 +29,7 @@ def get_w3js_use(eth_address):
         }
 
         return out_data
-    
+
     except:
         return {}
 
@@ -58,6 +58,7 @@ def process_and_save(df, out_csvs_dir_path, part_num):
 
 
 def process_and_save_parallel(df, out_csvs_dir_path, part_num):
+    logger = logging.getLogger(__name__)
     df['web3js_uses'] = pd.Series(dtype='object')
     df['all_github_code_search_results'] = pd.Series(dtype='object')
 
@@ -80,6 +81,7 @@ def process_and_save_parallel(df, out_csvs_dir_path, part_num):
 
 
 def write_into_dataset(in_csv_path, out_csvs_dir_path, data_length=1586, chunk_size=50):
+    logger = logging.getLogger(__name__)
     base_df_col_names = [
         'Address',
         'Name',
