@@ -133,10 +133,11 @@ dmypy.json
 
 # Secrets
 /github_access_token.txt
+/app_secrets/
+/secrets/
 
 # Results
 /soup_results.html
-/secrets/
 
 ## Django specific extras
 # Django #
