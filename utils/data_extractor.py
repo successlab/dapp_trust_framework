@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pandas as pd
 from math import ceil
 import concurrent.futures
@@ -12,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 def get_w3js_use(eth_address):
     search_address = eth_address
+    print("Received address: ", search_address)
     if is_valid_eth_address(search_address) is False or is_contract(search_address) is False:
         return {}
 
@@ -38,7 +41,7 @@ def process_and_save(df, out_csvs_dir_path, part_num):
     df['all_github_code_search_results'] = pd.Series(dtype='object')
 
     for i in range(len(df)):
-        eth_address = df.iat[i, df.columns.get_loc("Address")]
+        eth_address = df.iloc[i, 0]
         resp = get_w3js_use(eth_address)
 
         try:
@@ -102,9 +105,9 @@ def write_into_dataset(in_csv_path, out_csvs_dir_path, data_length=1586, chunk_s
 
     limit = int(ceil(data_length/chunk_size))
     for i in range(1, limit):
-        print("Processing Chunk " + str(i))
+        print("Processing Chunk " + str(i) + " at time: " + str(datetime.now()))
         if i == 0:
-            df = pd.read_csv(in_csv_path, skiprows=(i * chunk_size), nrows=chunk_size)
+            df = pd.read_csv(in_csv_path, skiprows=(i * chunk_size), nrows=chunk_size, names=base_df_col_names, header=None)
         else:
             df = pd.read_csv(in_csv_path, skiprows=(i * chunk_size), nrows=chunk_size, names=base_df_col_names, header=None)
 
@@ -112,7 +115,7 @@ def write_into_dataset(in_csv_path, out_csvs_dir_path, data_length=1586, chunk_s
         process_and_save(df, out_csvs_dir_path, i)
         del df
 
-        print("Finished processing chunk " + str(i))
+        print("Finished processing chunk " + str(i) + " at time: " + str(datetime.now()))
 
     print("Finished running the program")
 

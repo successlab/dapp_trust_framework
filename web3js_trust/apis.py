@@ -48,7 +48,7 @@ class ExtractData(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        in_csv = os.path.join(settings.BASE_DIR, "final_combined_df.csv")
+        in_csv = os.path.join(settings.BASE_DIR, "final_combined_df2.csv")
         out_chunks_dir = os.path.join(settings.BASE_DIR, "out_chunks/")
         write_into_dataset(in_csv, out_chunks_dir)
         return Response({"Message": "Success"})
