@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Custom apps
     "contract_relations.apps.ContractRelationsConfig",
     "web3js_trust.apps.Web3JsTrustConfig",
+    "trust_scoring.apps.TrustScoringConfig",
 ]
 
 MIDDLEWARE = [
