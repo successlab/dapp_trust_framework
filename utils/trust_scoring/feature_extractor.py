@@ -27,20 +27,25 @@ def get_features_df(address):
 def fill_in_features(df, address, transaction_len_limit=6):
 	transactions = get_all_transactions_until_limit(address, transaction_len_limit)
 
-	df.iat[0, df.columns.get_loc("n_transactions")] = len(transactions)
+	val_list = []
+
+	val_list.append(len(transactions))
 	try:
-		df.iat[0, df.columns.get_loc("avg_trx_freq")] = 1 / get_avg_trx_freq(transactions)
+		# df.loc[0]["avg_trx_freq"] = get_avg_trx_freq(transactions)
+		val_list.append(get_avg_trx_freq(transactions))
 	except:
-		pass
-	df.iat[0, df.columns.get_loc("avg_gas_price")] = get_avg_gas_price(transactions)
-	df.iat[0, df.columns.get_loc("avg_gas_consumed")] = get_avg_gas_consumed(transactions)
+		val_list.append(-1)
+	val_list.append(get_avg_gas_price(transactions))
+	val_list.append(get_avg_gas_consumed(transactions))
 
-	df.iat[0, df.columns.get_loc("median_sender_nonce")] = get_median_sender_nonce(transactions)
+	val_list.append(get_median_sender_nonce(transactions))
 
-	df.iat[0, df.columns.get_loc("returning_user_perc")] = get_returning_user_perc(transactions)
-	df.iat[0, df.columns.get_loc("n_unique_incoming_addresses")] = get_n_unique_incoming_addresses(transactions)
-	df.iat[0, df.columns.get_loc("n_deployer_transactions")] = get_n_deployer_transactions(transactions)
+	val_list.append(get_returning_user_perc(transactions))
+	val_list.append(get_n_unique_incoming_addresses(transactions))
+	val_list.append(get_n_deployer_transactions(transactions))
 
-	df.iat[0, df.columns.get_loc("contains_abi")] = contains_abi(address)
+	val_list.append(1 if contains_abi(address) else 0)
+
+	df.loc[0] = val_list
 
 	return df
