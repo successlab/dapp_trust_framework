@@ -1,6 +1,9 @@
 import json
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -120,7 +123,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Github cookie
 try:
-    from secrets.cookies import github_cookie
+    from app_secrets.cookies import github_cookie
 
     header_to_read = github_cookie
     GITHUB_COOKIE = header_to_read
@@ -133,7 +136,7 @@ except Exception as e:
 
 # Github header
 try:
-    from secrets.cookies import github_header
+    from app_secrets.cookies import github_header
 
     header_to_read = github_header
     GITHUB_HEADER = header_to_read
