@@ -1,6 +1,9 @@
 import json
 import os
+
 from pathlib import Path
+import joblib
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -172,3 +175,5 @@ if ENV_TYPE == "DataExtraction":
             },
         },
     }
+
+SCORING_ML_MODEL = joblib.load(os.path.join(BASE_DIR, 'random_forest_clf_model.joblib'))
