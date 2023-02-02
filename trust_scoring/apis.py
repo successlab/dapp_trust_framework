@@ -8,25 +8,24 @@ from utils.trust_scoring.ml_model_runner import get_prob_trust_score
 
 
 class GetTrustScore(APIView):
-	permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 
-	def get(self, request):
-		in_data = request.data
-		address = in_data["address"]
+    def get(self, request):
+        address = request.query_params.get("address")
 
-		contract_attribs_df = get_features_df(address)
+        contract_attribs_df = get_features_df(address)
 
-		prob_score = get_prob_trust_score(contract_attribs_df)
+        prob_score = get_prob_trust_score(contract_attribs_df)
 
-		write_features_df_into_db(
-			address,
-			contract_attribs_df,
-			trust_score=prob_score,
-		)
+        write_features_df_into_db(
+            address,
+            contract_attribs_df,
+            trust_score=prob_score,
+        )
 
-		response_dict = {
-			"trust_score": prob_score,
-			"contract_attributes": contract_attribs_df.iloc[0].to_dict(),
-		}
+        response_dict = {
+            "trust_score": prob_score,
+            "contract_attributes": contract_attribs_df.iloc[0].to_dict(),
+        }
 
-		return Response(response_dict)
+        return Response(response_dict)
