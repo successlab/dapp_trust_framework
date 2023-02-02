@@ -8,6 +8,17 @@ def write_features_df_into_db(address, features_df, n_months=6, trust_score=None
 	if len(features_df) == 0:
 		return
 
+
+	# Checking if the object already exists
+	term_len_to_check = timedelta(days=183 if n_months is 6 else (n_months * 31))
+	pre_existing = ContractFeatures.objects.filter(
+		contract__address__eth_address=address,
+		term_length=term_len_to_check
+	)
+
+	if len(pre_existing) > 0:
+		return
+
 	contract_features = ContractFeatures()
 
 	try:
@@ -25,7 +36,7 @@ def write_features_df_into_db(address, features_df, n_months=6, trust_score=None
 	contract_features.contract = contract_obj
 
 	if n_months != 6:
-		contract_features.term_length = timedelta(days=(n_months * 30))
+		contract_features.term_length = timedelta(days=(n_months * 31))
 
 	contract_features.n_transactions = features_df.iloc[0]["n_transactions"]
 	contract_features.avg_trx_freq = features_df.iloc[0]["avg_trx_freq"]
@@ -40,4 +51,3 @@ def write_features_df_into_db(address, features_df, n_months=6, trust_score=None
 		contract_features.trust_score = trust_score
 
 	contract_features.save()
-	

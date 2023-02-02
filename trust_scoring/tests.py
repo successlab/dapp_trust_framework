@@ -38,4 +38,3 @@ class TestUtils(TestCase):
 		contract_features = ContractFeatures.objects.filter(contract__address__eth_address=address)
 
 		self.assertGreater(len(contract_features), 0)
-		
