@@ -104,10 +104,14 @@ def write_into_dataset(in_csv_path, out_csvs_dir_path, data_length=1586, chunk_s
     ]
 
     limit = int(ceil(data_length/chunk_size))
-    for i in range(21, limit):
+    for i in range(32, limit):
         print("Processing Chunk " + str(i) + " at time: " + str(datetime.now()))
         if i == 0:
             df = pd.read_csv(in_csv_path, skiprows=(i * chunk_size), nrows=chunk_size, names=base_df_col_names, header=None)
+
+        elif i == 32:
+            df = pd.read_csv(in_csv_path, skiprows=(i * chunk_size), names=base_df_col_names, header=None)
+
         else:
             df = pd.read_csv(in_csv_path, skiprows=(i * chunk_size), nrows=chunk_size, names=base_df_col_names, header=None)
 
