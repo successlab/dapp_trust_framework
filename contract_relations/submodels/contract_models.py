@@ -7,7 +7,7 @@ from contract_relations.submodels.people_models import Person
 class Address(models.Model):
     eth_address = models.CharField(max_length=1024, null=True, default=None)
 
-    # Contract, EOA, or self-destructed contract
+    # Contract, EOA, NullContract or self-destructed contract
     type = models.CharField(max_length=50, null=True, default=None)
 
 

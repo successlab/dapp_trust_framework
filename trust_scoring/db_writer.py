@@ -1,7 +1,9 @@
+from celery import shared_task
+
 from contract_relations.link_finder import get_code_links, get_attribute_links
 from contract_relations.submodels.contract_models import ContractRelation, Address
 from trust_scoring.models import ContractFeatures
-from utils.basic_web3.address_classifier import is_contract
+from utils.basic_web3.address_classifier import is_contract, is_null_address
 
 
 def find_links_and_store_in_db(address):
@@ -22,12 +24,25 @@ def find_links_and_store_in_db(address):
 
 			code_contracts.append(link_dict)
 
-	# TODO: Push everything from this to the next TODO to Celery
+	process_db_store.delay(address, code_links, attribute_links)
+	return code_contracts
+
+
+@shared_task
+def process_db_store(address, code_links, attribute_links):
+
+	address_type = "NullContract" if is_null_address(address) else ""
+	if address_type == "":
+		address_type = "Contract" if is_contract(address) else "EOA"
 
 	parent_address_obj = Address.objects.get_or_create(
-		eth_address=address
+		eth_address=address,
+		type=address_type,
 	)
 	parent_address_obj[0].save()
+
+	if address_type == "NullContract":
+		return
 
 	for link in code_links:
 		child_address_obj = Address.objects.get_or_create(
@@ -56,5 +71,3 @@ def find_links_and_store_in_db(address):
 		cr[0].save()
 
 	# TODO: generate trust scores for the linked contracts that don't already have one
-
-	return code_contracts
