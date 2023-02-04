@@ -13,7 +13,7 @@ from utils.trust_scoring.ml_model_runner import get_prob_trust_score
 
 def generate_and_store_score(address):
 	w3 = Web3(Web3.HTTPProvider(settings.WEB3_HTTP_PROVIDER))
-	address = w3.toChecksumAddress(address)
+	address = w3.toChecksumAddress(address.lower())
 	contract_attribs_df = get_features_df(address)
 
 	prob_score = get_prob_trust_score(contract_attribs_df)
@@ -36,8 +36,16 @@ def generate_and_store_score(address):
 
 
 def find_links_and_store_in_db(address):
+	w3 = Web3(Web3.HTTPProvider(settings.WEB3_HTTP_PROVIDER))
+
 	code_links = get_code_links(address)
 	attribute_links = get_attribute_links(address)
+
+	# Cleaning the links
+	for i in range(len(code_links)):
+		code_links[i] = w3.toChecksumAddress(code_links[i].lower())
+	for i in range(len(attribute_links)):
+		attribute_links[i] = w3.toChecksumAddress(attribute_links[i].lower())
 
 	code_contracts = []
 	for link_address in code_links:
@@ -64,11 +72,11 @@ def process_db_store(address, code_links, attribute_links):
 	print("Processing DB store for address: ", address)
 
 	# Cleaning the linked addresses
-	for i in range(len(code_links)):
-		code_links[i] = w3.toChecksumAddress(code_links[i])
-
-	for i in range(len(attribute_links)):
-		attribute_links[i] = w3.toChecksumAddress(attribute_links[i])
+	# for i in range(len(code_links)):
+	# 	code_links[i] = w3.toChecksumAddress(code_links[i].lower())
+	#
+	# for i in range(len(attribute_links)):
+	# 	attribute_links[i] = w3.toChecksumAddress(attribute_links[i].lower())
 
 	address_type = "NullContract" if is_null_address(address) else ""
 	if address_type == "":
@@ -78,7 +86,6 @@ def process_db_store(address, code_links, attribute_links):
 		eth_address=address,
 		type=address_type,
 	)
-	parent_address_obj[0].save()
 
 	if address_type == "NullContract":
 		return
@@ -87,27 +94,23 @@ def process_db_store(address, code_links, attribute_links):
 		child_address_obj = Address.objects.get_or_create(
 			eth_address=link
 		)
-		child_address_obj[0].save()
 
 		cr = ContractRelation.objects.get_or_create(
 			parent=parent_address_obj[0],
 			child=child_address_obj[0],
 			relation_type="CodeMention"
 		)
-		cr[0].save()
 
 	for link in attribute_links:
 		child_address_obj = Address.objects.get_or_create(
 			eth_address=link
 		)
-		child_address_obj[0].save()
 
 		cr = ContractRelation.objects.get_or_create(
 			parent=parent_address_obj[0],
 			child=child_address_obj[0],
 			relation_type="AttribVal"
 		)
-		cr[0].save()
 
 	all_addresses = code_links + attribute_links
 	for address in all_addresses:

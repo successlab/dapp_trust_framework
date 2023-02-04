@@ -19,20 +19,22 @@ def write_features_df_into_db(address, features_df, n_months=6, trust_score=None
 	if len(pre_existing) > 0:
 		return
 
-	contract_features = ContractFeatures()
-
 	try:
 		contract_obj = Contract.objects.get(address__eth_address=address)
 	except:
-		address_obj = Address()
-		address_obj.eth_address = address
-		address_obj.type = "Contract"
-		address_obj.save()
+		address_obj = Address.objects.get_or_create(
+			eth_address=address,
+			type="Contract",
+		)
 
-		contract_obj = Contract()
-		contract_obj.address = address_obj
-		contract_obj.save()
+		contract_obj = Contract.objects.get_or_create(
+			address=address_obj[0]
+		)[0]
 
+	if ContractFeatures.objects.filter(contract=contract_obj).exists():
+		return
+
+	contract_features = ContractFeatures()
 	contract_features.contract = contract_obj
 
 	if n_months != 6:

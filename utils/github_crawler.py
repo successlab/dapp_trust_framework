@@ -2,7 +2,7 @@ import concurrent.futures
 
 from django.conf import settings
 
-from contract_relations.models import *
+# from contract_relations.models import *
 from utils.crawler_ops.content_ops import (
     usage_stats,
     get_max_pagecount,
@@ -14,21 +14,21 @@ from utils.crawler_ops.fetching.search_results import get_github_search_results_
 from utils.statops.github_scoring import get_overall_usage_score
 
 
-def write_search_results_into_db(results, parent_contract_address):
-    if len(Contract.objects.filter(address=parent_contract_address)) == 0:
-        dapp = DApp()
-        dapp.save()
-
-        parent_contract = Contract()
-        parent_contract.address = parent_contract_address
-        parent_contract.dapp = dapp
-        parent_contract.save()
-
-    else:
-        parent_contract = Contract.objects.get(address=parent_contract_address)
-
-    for user in results.keys():
-        print(user)
+# def write_search_results_into_db(results, parent_contract_address):
+#     if len(Contract.objects.filter(address__eth_address=parent_contract_address)) == 0:
+#         dapp = DApp()
+#         dapp.save()
+#
+#         parent_contract = Contract()
+#         parent_contract.address = parent_contract_address
+#         parent_contract.dapp = dapp
+#         parent_contract.save()
+#
+#     else:
+#         parent_contract = Contract.objects.get(address=parent_contract_address)
+#
+#     for user in results.keys():
+#         print(user)
 
 
 def get_github_search_results(contract_address):
