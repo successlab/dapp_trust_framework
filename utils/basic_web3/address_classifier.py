@@ -9,17 +9,16 @@ def is_contract(address):
     w3 = Web3(Web3.HTTPProvider(settings.WEB3_HTTP_PROVIDER))
     address = w3.toChecksumAddress(address)
     if is_null_address(address):
-        return True, ""
+        return True
 
     contract_code = w3.eth.get_code(address)
-    abi = ""
     abi = get_contract_abi(address)
 
     if (abi != "" and abi != "Contract source code not verified" and abi.startswith("[")) or contract_code != HexBytes(
             '0x'):
-        return True, abi
+        return True
     else:
-        return False, abi
+        return False
 
 
 def is_valid_eth_address(address):
