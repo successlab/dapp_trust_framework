@@ -218,3 +218,4 @@ GitHub.sublime-settings
 *.DS_Store
 /pycharm_test_conf.txt
 /env_export_script.sh
+/docker_compose.env

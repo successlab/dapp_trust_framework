@@ -15,4 +15,4 @@ def get_attribute_links(address):
     bytecode = str(get_contract_bin(address).hex())
     instructions = get_opcode(bytecode)
     storage_locations = get_storage_locations(instructions)
-    return get_addresses_in_storage(storage_locations)
+    return get_addresses_in_storage(address, storage_locations)

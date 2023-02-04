@@ -1,0 +1,36 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  web:
+    build: .
+    command: sh ./run.sh
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - docker_compose.env
+  rabbitmq:
+    image: rabbitmq:latest
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+  celery_worker:
+    build: .
+    command: celery -A contractsecurityapp worker --autoscale=10,1 --loglevel=info
+    depends_on:
+      - rabbitmq
+    env_file:
+      - docker_compose.env
+
+volumes:
+  db-data:

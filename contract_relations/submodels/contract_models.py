@@ -4,9 +4,16 @@ from contract_relations.submodels.dapp_models import DApp
 from contract_relations.submodels.people_models import Person
 
 
+class Address(models.Model):
+    eth_address = models.CharField(max_length=1024, null=True, default=None)
+
+    # Contract, EOA, NullContract or self-destructed contract
+    type = models.CharField(max_length=50, null=True, default=None)
+
+
 class Contract(models.Model):
-    address = models.CharField(max_length=1024, null=True, default=None)
-    dapp = models.ForeignKey(DApp, on_delete=models.CASCADE)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    dapp = models.ForeignKey(DApp, on_delete=models.CASCADE, null=True, default=None)
     github_repo = models.CharField(max_length=2048, null=True, default=None)
     code_location_url = models.CharField(max_length=2048, null=True, default=None)
 
@@ -23,11 +30,11 @@ class ContractAssociation(models.Model):
 
 class ContractRelation(models.Model):
     parent = models.ForeignKey(
-        Contract, on_delete=models.CASCADE, related_name="parent"
+        Address, on_delete=models.CASCADE, related_name="parent"
     )
-    child = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name="child")
+    child = models.ForeignKey(Address, on_delete=models.CASCADE, related_name="child")
 
     # This can be: "Import" or "Mention"
-    # Import - Means that the child (contract in focus) is using the parent to be able to run
-    # Mention - The parent (contract in focus) address is mentioned in the child contract
+    # CodeMention - Part of the logic
+    # AttribVal - A value within the storage locations of the parent
     relation_type = models.CharField(max_length=120)

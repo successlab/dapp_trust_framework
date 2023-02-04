@@ -1,9 +1,11 @@
 import json
 import os
+
 from pathlib import Path
+import joblib
+
 from dotenv import load_dotenv
 
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,9 +23,14 @@ ALLOWED_HOSTS = ["*"]
 
 """
 Environment Types
-Local, CI, Test, Prod, DataExtraction
+Local, CI, Test, Prod, DataExtraction, Docker
 """
-ENV_TYPE = os.environ["ENV_TYPE"]
+
+try:
+    ENV_TYPE = os.environ["ENV_TYPE"]
+except:
+    load_dotenv()
+    ENV_TYPE = os.environ["ENV_TYPE"]
 
 # Application definition
 
@@ -35,11 +42,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     # Third party apps
     "rest_framework",
+    "celery",
+
     # Custom apps
     "contract_relations.apps.ContractRelationsConfig",
     "web3js_trust.apps.Web3JsTrustConfig",
+    "trust_scoring.apps.TrustScoringConfig",
 ]
 
 MIDDLEWARE = [
@@ -75,12 +86,25 @@ WSGI_APPLICATION = "contractsecurityapp.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if ENV_TYPE == "Prod" or ENV_TYPE == "Docker":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'password',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
     }
-}
+
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -171,3 +195,11 @@ if ENV_TYPE == "DataExtraction":
             },
         },
     }
+
+SCORING_ML_MODEL = joblib.load(os.path.join(BASE_DIR, 'random_forest_clf_model.joblib'))
+
+# Celery configuration
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
