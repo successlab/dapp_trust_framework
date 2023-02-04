@@ -18,9 +18,9 @@ def generate_and_store_score(address):
 
 	prob_score = get_prob_trust_score(contract_attribs_df)
 
-	write_features_df_into_db(
+	write_features_df_into_db.delay(
 		address,
-		contract_attribs_df,
+		contract_attribs_df.to_json(),
 		trust_score=prob_score,
 	)
 

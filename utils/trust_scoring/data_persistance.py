@@ -1,10 +1,14 @@
+from celery import shared_task
 from datetime import timedelta
+import pandas as pd
 
 from trust_scoring.models import ContractFeatures
 from contract_relations.models import Contract, Address
 
+@shared_task
+def write_features_df_into_db(address, features_df_json, n_months=6, trust_score=None):
+	features_df = pd.read_json(features_df_json)
 
-def write_features_df_into_db(address, features_df, n_months=6, trust_score=None):
 	if len(features_df) == 0:
 		return
 
