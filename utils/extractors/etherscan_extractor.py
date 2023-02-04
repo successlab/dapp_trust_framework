@@ -23,13 +23,19 @@ def get_all_contract_props(address):
 
 def get_contract_abi(address):
     api_endpoint = (
-        "https://api.etherscan.io/api?module=contract&action=getsourcecode&address="
+        f"https://api.etherscan.io/api?module=contract&action=getsourcecode&apikey={settings.ETHERSCAN_API_KEY}&address="
     )
     response = requests.get(api_endpoint + address)
-    response_json = response.json()
-    abi = response_json["result"][0]["ABI"]
 
-    return abi
+    response_json = response.json()
+    try:
+        abi = response_json["result"][0]["ABI"]
+        return abi
+    except:
+        if response_json["result"] == 'Max rate limit reached':
+            return get_contract_abi(address)
+        else:
+            return ""
 
 
 def get_all_transactions_until_limit(address, n_months):
