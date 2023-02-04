@@ -20,7 +20,7 @@ services:
     env_file:
       - docker_compose.env
   rabbitmq:
-    image: rabbitmq:latest-management
+    image: rabbitmq:latest
     ports:
       - "15672:15672"
       - "5672:5672"
