@@ -44,30 +44,32 @@ def process_db_store(address, code_links, attribute_links):
 	if address_type == "NullContract":
 		return
 
-	for link in code_links:
-		child_address_obj = Address.objects.get_or_create(
-			eth_address=link
-		)
-		child_address_obj[0].save()
+	relations_stored = ContractRelation.objects.filter(parent=parent_address_obj).exists()
+	if not relations_stored:
+		for link in code_links:
+			child_address_obj = Address.objects.get_or_create(
+				eth_address=link
+			)
+			child_address_obj[0].save()
 
-		cr = ContractRelation.objects.get_or_create(
-			parent=parent_address_obj[0],
-			child=child_address_obj[0],
-			relation_type="CodeMention"
-		)
-		cr[0].save()
+			cr = ContractRelation.objects.get_or_create(
+				parent=parent_address_obj[0],
+				child=child_address_obj[0],
+				relation_type="CodeMention"
+			)
+			cr[0].save()
 
-	for link in attribute_links:
-		child_address_obj = Address.objects.get_or_create(
-			eth_address=link
-		)
-		child_address_obj[0].save()
+		for link in attribute_links:
+			child_address_obj = Address.objects.get_or_create(
+				eth_address=link
+			)
+			child_address_obj[0].save()
 
-		cr = ContractRelation.objects.get_or_create(
-			parent=parent_address_obj[0],
-			child=child_address_obj[0],
-			relation_type="AttribVal"
-		)
-		cr[0].save()
+			cr = ContractRelation.objects.get_or_create(
+				parent=parent_address_obj[0],
+				child=child_address_obj[0],
+				relation_type="AttribVal"
+			)
+			cr[0].save()
 
 	# TODO: generate trust scores for the linked contracts that don't already have one
