@@ -104,6 +104,8 @@ def write_into_dataset(in_csv_path, out_csvs_dir_path, data_length=1586, chunk_s
     ]
 
     limit = int(ceil(data_length/chunk_size))
+    print("The limit is: ", limit)
+    
     for i in range(32, limit + 1):
         print("Processing Chunk " + str(i) + " at time: " + str(datetime.now()))
         if i == 0:
