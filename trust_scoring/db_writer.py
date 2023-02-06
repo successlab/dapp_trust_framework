@@ -14,7 +14,7 @@ from utils.trust_scoring.ml_model_runner import get_prob_trust_score
 def generate_and_store_score(address):
 	w3 = Web3(Web3.HTTPProvider(settings.WEB3_HTTP_PROVIDER))
 	address = w3.toChecksumAddress(address.lower())
-	contract_attribs_df = get_features_df(address)
+	contract_attribs_df, web3js_uses = get_features_df(address)
 
 	prob_score = get_prob_trust_score(contract_attribs_df)
 
@@ -27,6 +27,7 @@ def generate_and_store_score(address):
 	response_dict = {
 		"trust_score": prob_score,
 		"contract_attributes": contract_attribs_df.iloc[0].to_dict(),
+		"open_source_web3js_interfaces": web3js_uses,
 	}
 
 	code_contracts = find_links_and_store_in_db(address)

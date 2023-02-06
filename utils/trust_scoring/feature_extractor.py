@@ -7,6 +7,7 @@ from .transactions_summarizer.median_summarizers import get_median_sender_nonce
 from .transactions_summarizer.user_stats import get_returning_user_perc, get_n_unique_incoming_addresses, \
 	get_n_deployer_transactions
 from ..extractors.etherscan_extractor import get_all_transactions_until_limit
+from ..github_crawler import get_github_all_code_search_results, check_web3js_usage_parallel
 
 
 def get_features_df(address):
@@ -18,10 +19,10 @@ def get_features_df(address):
 		df[feature] = pd.Series(dtype=pd_dtype)
 
 	# Populating the dataframe
-	df = fill_in_features(df, address)
+	df, web3js_uses = fill_in_features(df, address)
 
 	# Returning the populated pandas dataframe
-	return df
+	return df, web3js_uses
 
 
 def fill_in_features(df, address, transaction_len_limit=6):
@@ -45,7 +46,16 @@ def fill_in_features(df, address, transaction_len_limit=6):
 	val_list.append(get_n_deployer_transactions(transactions))
 
 	val_list.append(1 if contains_abi(address) else 0)
+	w3js_import_val, web3js_uses = get_w3js_uses(address)
+	val_list.append(1 if w3js_import_val is True else 0)
 
 	df.loc[0] = val_list
 
-	return df
+	return df, web3js_uses
+
+
+def get_w3js_uses(address):
+	res = get_github_all_code_search_results(address)
+	found_web3js_import, found_metamask_trigger, web3js_uses = check_web3js_usage_parallel(res)
+
+	return found_web3js_import, web3js_uses

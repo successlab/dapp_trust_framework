@@ -8,6 +8,7 @@ features_and_pandas_dtypes = {
 	'n_unique_incoming_addresses': 'int',
 	'n_deployer_transactions': 'int',
 	'contains_abi': 'int',  # Bool, but convert it into 0/1 (1 - True; 0 - False)
+	'contains_w3_js': 'int', # Bool, but convert it into 0/1 (1 - True; 0 - False)
 }
 
 feature_weightages = {
@@ -19,5 +20,6 @@ feature_weightages = {
 	'returning_user_perc': 0.03689057281240384,
 	'n_unique_incoming_addresses': 0.06706199090260874,
 	'n_deployer_transactions': 0.043608406586295174,
-	'contains_abi': 0.1508202506388889
+	'contains_abi': 0.1508202506388889,
+	'contains_w3_js': 0.08435056192576892,
 }
