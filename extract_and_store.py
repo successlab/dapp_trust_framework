@@ -29,8 +29,7 @@ def read_address_list():
 
 
 if __name__ == '__main__':
-	# addresses = read_address_list()
-	addresses = ['0xc92a1016E6707cD4D330dDD2368f8f1D880F598a']
+	addresses = read_address_list()
 	api_key_path = '/sec/api_key.txt'
 	main(addresses, api_key_path)
 
