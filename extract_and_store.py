@@ -12,6 +12,7 @@ def main(addresses, api_key_path):
 	with open('tool_output.csv', 'w') as f:
 		f.write("Address,tool_output\n")
 		for address in addresses:
+			print("Checking ", address)
 			result = run_securify(address, api_key_path)
 			result_dict = {"output": result}
 			f.write(address + "," + json.dumps(result_dict) + '\n')
