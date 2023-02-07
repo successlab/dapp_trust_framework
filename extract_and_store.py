@@ -3,7 +3,7 @@ import json
 
 
 def run_securify(address, api_key_path):
-	cmd = f"sudo docker run -it -v /home/web3success/securify2:/share securify {address} --from-blockchain --key {api_key_path}"
+	cmd = f"sudo docker run -it securify {address} --from-blockchain --key {api_key_path}"
 	output = subprocess.check_output(cmd, shell=True).decode()
 	print(output)
 	return output
@@ -31,6 +31,6 @@ def read_address_list():
 if __name__ == '__main__':
 	# addresses = read_address_list()
 	addresses = ['0xc92a1016E6707cD4D330dDD2368f8f1D880F598a']
-	api_key_path = '/share/api_key.txt'
+	api_key_path = '/sec/api_key.txt'
 	main(addresses, api_key_path)
 
