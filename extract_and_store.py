@@ -1,5 +1,6 @@
 import subprocess
 import json
+import time
 
 
 def run_securify(address, api_key_path):
@@ -14,10 +15,15 @@ def main(addresses, api_key_path):
 		f.write("Address,tool_output\n")
 		for address in addresses:
 			print("Checking ", address)
-			result = run_securify(address, api_key_path)
-			result_dict = {"output": result}
-			f.write(address + "," + json.dumps(result_dict) + '\n')
-			print("Finished ", address)
+			try:
+				result = run_securify(address, api_key_path)
+				result_dict = {"output": result}
+				f.write(address + "," + json.dumps(result_dict) + '\n')
+				print("Finished ", address)
+			except:
+				print("Failed ", address)
+
+			time.sleep(0.7)
 
 
 def read_address_list():
