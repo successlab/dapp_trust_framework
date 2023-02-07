@@ -14,7 +14,7 @@ def main(addresses, api_key_path):
 		for address in addresses:
 			result = run_securify(address, api_key_path)
 			result_dict = {"output": result}
-			f.write(address + "," + result_dict + '\n')
+			f.write(address + "," + json.dumps(result_dict) + '\n')
 			print("Finished ", address)
 
 
