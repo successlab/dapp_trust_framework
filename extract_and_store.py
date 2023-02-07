@@ -23,7 +23,7 @@ def main(addresses, api_key_path):
 			except:
 				print("Failed ", address)
 
-			time.sleep(0.7)
+			time.sleep(2)
 
 
 def read_address_list():
