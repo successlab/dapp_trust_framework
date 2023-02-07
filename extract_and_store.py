@@ -5,6 +5,7 @@ import json
 def run_securify(address, api_key_path):
 	cmd = f"sudo docker run -it -v /home/web3success/securify2:/share securify {address} --from-blockchain --key {api_key_path}"
 	output = subprocess.check_output(cmd, shell=True).decode()
+	print(output)
 	return output
 
 
