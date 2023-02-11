@@ -50,6 +50,7 @@ def write_features_df_into_db(address, features_df_json, web3js_uses_dict=None, 
 
 	contract_features.n_transactions = features_df.iloc[0]["n_transactions"]
 	contract_features.avg_trx_freq = features_df.iloc[0]["avg_trx_freq"]
+	contract_features.avg_gas_price = features_df.iloc[0]["avg_gas_price"]
 	contract_features.avg_gas_consumed = features_df.iloc[0]["avg_gas_consumed"]
 	contract_features.median_sender_nonce = features_df.iloc[0]["median_sender_nonce"]
 	contract_features.returning_user_perc = features_df.iloc[0]["returning_user_perc"]

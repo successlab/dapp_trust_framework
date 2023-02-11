@@ -12,6 +12,7 @@ class ContractFeatures(models.Model):
 	term_length = models.DurationField(default=timedelta(days=183))
 	n_transactions = models.IntegerField()
 	avg_trx_freq = models.FloatField()
+	avg_gas_price = models.FloatField(default=None, null=True)
 	avg_gas_consumed = models.FloatField()
 	median_sender_nonce = models.FloatField()
 	returning_user_perc = models.FloatField()
