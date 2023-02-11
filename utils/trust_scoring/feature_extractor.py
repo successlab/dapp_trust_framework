@@ -1,5 +1,6 @@
 import pandas as pd
 
+from trust_scoring.models import ContractFeatures
 from .abi_availability_checker import contains_abi
 from .model_features import features_and_pandas_dtypes
 from .transactions_summarizer.mean_summarizers import get_avg_trx_freq, get_avg_gas_price, get_avg_gas_consumed
@@ -18,11 +19,38 @@ def get_features_df(address):
 	for feature, pd_dtype in features_and_pandas_dtypes.items():
 		df[feature] = pd.Series(dtype=pd_dtype)
 
-	# Populating the dataframe
-	df, web3js_uses = fill_in_features(df, address)
+	# Checking if the features already exist
+	if ContractFeatures.objects.filter(contract__address__eth_address=address).exists():
+		df, web3js_uses, trust_score = fill_in_features_from_db(df, address)
+		return df, web3js_uses, trust_score
 
-	# Returning the populated pandas dataframe
-	return df, web3js_uses
+	else:
+		# Populating the dataframe
+		df, web3js_uses = fill_in_features(df, address)
+		return df, web3js_uses, None
+
+
+def fill_in_features_from_db(df, address):
+	features_obj = ContractFeatures.objects.get(contract__address__eth_address=address)
+
+	val_list = []
+	val_list.append(features_obj.n_transactions)
+	val_list.append(features_obj.avg_trx_freq)
+	val_list.append(features_obj.avg_gas_price)
+	val_list.append(features_obj.avg_gas_consumed)
+	val_list.append(features_obj.median_sender_nonce)
+	val_list.append(features_obj.returning_user_perc)
+	val_list.append(features_obj.n_unique_incoming_addresses)
+	val_list.append(features_obj.n_deployer_transactions)
+	val_list.append(features_obj.contains_abi)
+	val_list.append(1 if len(features_obj.web3js_uses) > 0 else 0)
+
+	df.loc[0] = val_list
+
+	web3js_uses = features_obj.web3js_uses
+	trust_score = features_obj.trust_score
+
+	return df, web3js_uses, trust_score
 
 
 def fill_in_features(df, address, transaction_len_limit=6):
@@ -31,11 +59,13 @@ def fill_in_features(df, address, transaction_len_limit=6):
 	val_list = []
 
 	val_list.append(len(transactions))
+
 	try:
 		# df.loc[0]["avg_trx_freq"] = get_avg_trx_freq(transactions)
 		val_list.append(get_avg_trx_freq(transactions))
 	except:
 		val_list.append(-1)
+
 	val_list.append(get_avg_gas_price(transactions))
 	val_list.append(get_avg_gas_consumed(transactions))
 

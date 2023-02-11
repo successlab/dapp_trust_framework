@@ -18,7 +18,7 @@ services:
     depends_on:
       - db
     env_file:
-      - docker_compose.env
+      - .env
   rabbitmq:
     image: rabbitmq:latest
     ports:
@@ -30,7 +30,7 @@ services:
     depends_on:
       - rabbitmq
     env_file:
-      - docker_compose.env
+      - .env
 
 volumes:
   db-data:
