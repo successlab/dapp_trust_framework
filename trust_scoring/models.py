@@ -21,6 +21,9 @@ class ContractFeatures(models.Model):
 	n_deployer_transactions = models.IntegerField()
 	contains_abi = models.BooleanField()
 
+	# Web3js-based features
+	web3js_uses = models.JSONField(default=None, null=True)
+
 	# Model predicted score
 	trust_score = models.IntegerField(null=True, default=None)
 	

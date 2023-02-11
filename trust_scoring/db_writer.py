@@ -21,6 +21,7 @@ def generate_and_store_score(address):
 	write_features_df_into_db.delay(
 		address,
 		contract_attribs_df.to_json(),
+		web3js_uses_dict=web3js_uses,
 		trust_score=prob_score,
 	)
 

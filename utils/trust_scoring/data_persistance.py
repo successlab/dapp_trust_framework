@@ -1,3 +1,4 @@
+import json
 from celery import shared_task
 from datetime import timedelta
 import pandas as pd
@@ -6,7 +7,10 @@ from trust_scoring.models import ContractFeatures
 from contract_relations.models import Contract, Address
 
 @shared_task
-def write_features_df_into_db(address, features_df_json, n_months=6, trust_score=None):
+def write_features_df_into_db(address, features_df_json, web3js_uses_dict=None, n_months=6, trust_score=None):
+	if web3js_uses_dict is not None:
+		web3js_uses_dict = web3js_uses_dict
+
 	features_df = pd.read_json(features_df_json)
 
 	if len(features_df) == 0:
@@ -52,6 +56,7 @@ def write_features_df_into_db(address, features_df_json, n_months=6, trust_score
 	contract_features.n_unique_incoming_addresses = features_df.iloc[0]["n_unique_incoming_addresses"]
 	contract_features.n_deployer_transactions = features_df.iloc[0]["n_deployer_transactions"]
 	contract_features.contains_abi = features_df.iloc[0]["contains_abi"]
+	contract_features.web3js_uses = web3js_uses_dict
 
 	if trust_score is not None:
 		contract_features.trust_score = trust_score
