@@ -133,10 +133,11 @@ dmypy.json
 
 # Secrets
 /github_access_token.txt
+/app_secrets/
+/secrets/
 
 # Results
 /soup_results.html
-/secrets/
 
 ## Django specific extras
 # Django #
@@ -216,4 +217,6 @@ GitHub.sublime-settings
 
 *.DS_Store
 /pycharm_test_conf.txt
+/env_export_script.sh
+/docker_compose.env
 /app_secrets/
