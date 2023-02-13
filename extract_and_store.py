@@ -63,6 +63,7 @@ if __name__ == '__main__':
 	api_key_path = '/sec/api_key.txt'
 	# extract_securify_data(addresses, api_key_path)
 
-	out_csv_path = "/Users/administrator/Documents/trust_score_output.csv"
-	extract_trust_score_output(addresses, out_csv_path)
+	out_csv_path = "/Users/administrator/Documents/trust_score_output_p2.csv"
+	starting_i = addresses.index("0xe05D803fa0c5832Fa2262465290abB25d6C2bFA3")
+	extract_trust_score_output(addresses[(starting_i+1):], out_csv_path)
 
