@@ -220,3 +220,4 @@ GitHub.sublime-settings
 /env_export_script.sh
 /docker_compose.env
 /app_secrets/
+/db-data/
