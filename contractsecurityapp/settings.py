@@ -87,7 +87,9 @@ WSGI_APPLICATION = "contractsecurityapp.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-if ENV_TYPE == "Prod" or ENV_TYPE == "Docker":
+docker_envs = ["Prod", "Docker", "local_prod"]
+if ENV_TYPE in docker_envs:
+    print("Connecting to Postgres")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
