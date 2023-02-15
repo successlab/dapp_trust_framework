@@ -43,11 +43,18 @@ def fill_in_features_from_db(df, address):
 	val_list.append(features_obj.n_unique_incoming_addresses)
 	val_list.append(features_obj.n_deployer_transactions)
 	val_list.append(features_obj.contains_abi)
-	val_list.append(1 if len(features_obj.web3js_uses) > 0 else 0)
+	try:
+		val_list.append(1 if len(features_obj.web3js_uses) > 0 else 0)
+	except:
+		val_list.append(0)
 
 	df.loc[0] = val_list
 
-	web3js_uses = features_obj.web3js_uses
+	try:
+		web3js_uses = features_obj.web3js_uses
+	except:
+		web3js_uses = []
+
 	trust_score = features_obj.trust_score
 
 	return df, web3js_uses, trust_score
@@ -76,8 +83,13 @@ def fill_in_features(df, address, transaction_len_limit=6):
 	val_list.append(get_n_deployer_transactions(transactions))
 
 	val_list.append(1 if contains_abi(address) else 0)
-	w3js_import_val, web3js_uses = get_w3js_uses(address)
-	val_list.append(1 if w3js_import_val is True else 0)
+
+	try:
+		w3js_import_val, web3js_uses = get_w3js_uses(address)
+		val_list.append(1 if w3js_import_val is True else 0)
+	except:
+		web3js_uses = []
+		val_list.append(0)
 
 	df.loc[0] = val_list
 
