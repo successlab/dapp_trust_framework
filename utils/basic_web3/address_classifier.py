@@ -2,10 +2,21 @@ from django.conf import settings
 from hexbytes import HexBytes
 from web3 import Web3
 
+from contract_relations.submodels.contract_models import Address
 from utils.extractors.etherscan_extractor import get_contract_abi
 
 
 def is_contract(address):
+
+    if Address.objects.filter(eth_address=address).exists():
+        address_obj = Address.objects.get(eth_address=address)
+
+        if address_obj.type.lower() == "contract":
+            return True
+
+        else:
+            return False
+
     w3 = Web3(Web3.HTTPProvider(settings.WEB3_HTTP_PROVIDER))
     address = w3.toChecksumAddress(address)
     if is_null_address(address):
