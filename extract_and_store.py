@@ -50,8 +50,8 @@ def extract_trust_score_output(addresses, out_csv_path="trust_score_output.csv")
 			time.sleep(0.7)
 
 
-def read_address_list():
-	with open("address_list.txt", "r") as f:
+def read_address_list(filename="address_list.txt"):
+	with open(filename, "r") as f:
 		raw_str = f.read()
 
 	addresses = raw_str.split("\n")
@@ -59,11 +59,12 @@ def read_address_list():
 
 
 if __name__ == '__main__':
-	addresses = read_address_list()
+	address_list_file_name = "dataset2_zero_day_addresses.txt"
+	addresses = read_address_list(address_list_file_name)
 	api_key_path = '/sec/api_key.txt'
 	# extract_securify_data(addresses, api_key_path)
 
-	out_csv_path = "/Users/administrator/Documents/trust_score_output_all.csv"
+	out_csv_path = "/Users/administrator/Documents/trust_score_output_dataset2.csv"
 	# starting_i = addresses.index("0x3A306a399085F3460BbcB5b77015Ab33806A10d5")
 	# print("Starting i: ", starting_i)
 	# extract_trust_score_output(addresses[(starting_i+1):], out_csv_path)
