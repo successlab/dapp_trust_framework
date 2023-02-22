@@ -13,6 +13,8 @@ class Address(models.Model):
 
 class Contract(models.Model):
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    name = models.CharField(max_length=256, null=True, default=None)
+
     dapp = models.ForeignKey(DApp, on_delete=models.CASCADE, null=True, default=None)
     github_repo = models.CharField(max_length=2048, null=True, default=None)
     code_location_url = models.CharField(max_length=2048, null=True, default=None)
