@@ -18,7 +18,7 @@ def write_features_df_into_db(address, features_df_json, contract_name="", is_pr
 
 
 	# Checking if the object already exists
-	term_len_to_check = timedelta(days=183 if n_months is 6 else (n_months * 31))
+	term_len_to_check = timedelta(days=183 if n_months == 6 else (n_months * 31))
 	pre_existing = ContractFeatures.objects.filter(
 		contract__address__eth_address=address,
 		term_length=term_len_to_check
