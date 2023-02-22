@@ -17,8 +17,9 @@ def get_all_contract_props(address):
     source_code = response_json["SourceCode"]
     abi = json.loads(response_json["ABI"])
     is_proxy = response_json["Proxy"] == "1"
+    contract_name = response_json["ContractName"]
 
-    return source_code, abi, is_proxy
+    return source_code, abi, is_proxy, contract_name
 
 
 def get_contract_abi(address):
