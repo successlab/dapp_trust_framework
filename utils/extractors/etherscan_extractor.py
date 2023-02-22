@@ -9,16 +9,23 @@ import requests
 
 def get_all_contract_props(address):
     api_endpoint = (
-        "https://api.etherscan.io/api?module=contract&action=getsourcecode&address="
+        f"https://api.etherscan.io/api?module=contract&action=getsourcecode&address={address}"
+        f"&apikey={settings.ETHERSCAN_API_KEY}"
     )
-    response = requests.get(api_endpoint + address)
+    response = requests.get(api_endpoint)
     response_json = response.json()
 
-    source_code = response_json["SourceCode"]
-    abi = json.loads(response_json["ABI"])
-    is_proxy = response_json["Proxy"] == "1"
+    if response_json['message'] == "OK":
+        response_json = response_json["result"][0]
+        source_code = response_json["SourceCode"]
+        abi = json.loads(response_json["ABI"])
+        is_proxy = response_json["Proxy"] == "1"
+        contract_name = response_json["ContractName"]
 
-    return source_code, abi, is_proxy
+        return source_code, abi, is_proxy, contract_name
+
+    else:
+        return None, None, None, None
 
 
 def get_contract_abi(address):

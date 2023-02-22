@@ -6,6 +6,7 @@ from contract_relations.link_finder import get_code_links, get_attribute_links
 from contract_relations.submodels.contract_models import ContractRelation, Address
 from trust_scoring.models import ContractFeatures
 from utils.basic_web3.address_classifier import is_contract, is_null_address
+from utils.extractors.etherscan_extractor import get_all_contract_props
 from utils.trust_scoring.data_persistance import write_features_df_into_db
 from utils.trust_scoring.feature_extractor import get_features_df
 from utils.trust_scoring.ml_model_runner import get_prob_trust_score
@@ -16,17 +17,23 @@ def generate_and_store_score(address):
 	address = w3.toChecksumAddress(address.lower())
 	contract_attribs_df, web3js_uses, prob_score = get_features_df(address)
 
+	_, _, is_proxy, contract_name = get_all_contract_props(address)
+
 	if prob_score is None:
 		prob_score = get_prob_trust_score(contract_attribs_df)
 		write_features_df_into_db.delay(
 			address,
 			contract_attribs_df.to_json(),
+			is_proxy,
+			contract_name,
 			web3js_uses_dict=web3js_uses,
 			trust_score=prob_score,
 		)
 
 	response_dict = {
 		"trust_score": prob_score,
+		"contract_name": contract_name,
+		"is_proxy": is_proxy,
 		"contract_attributes": contract_attribs_df.iloc[0].to_dict(),
 		"open_source_web3js_interfaces": web3js_uses,
 	}

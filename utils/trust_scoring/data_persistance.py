@@ -7,7 +7,7 @@ from trust_scoring.models import ContractFeatures
 from contract_relations.models import Contract, Address
 
 @shared_task
-def write_features_df_into_db(address, features_df_json, web3js_uses_dict=None, n_months=6, trust_score=None):
+def write_features_df_into_db(address, features_df_json, contract_name="", is_proxy=False, web3js_uses_dict=None, n_months=6, trust_score=None):
 	if web3js_uses_dict is not None:
 		web3js_uses_dict = web3js_uses_dict
 
@@ -18,7 +18,7 @@ def write_features_df_into_db(address, features_df_json, web3js_uses_dict=None, 
 
 
 	# Checking if the object already exists
-	term_len_to_check = timedelta(days=183 if n_months is 6 else (n_months * 31))
+	term_len_to_check = timedelta(days=183 if n_months == 6 else (n_months * 31))
 	pre_existing = ContractFeatures.objects.filter(
 		contract__address__eth_address=address,
 		term_length=term_len_to_check
@@ -36,7 +36,9 @@ def write_features_df_into_db(address, features_df_json, web3js_uses_dict=None, 
 		)
 
 		contract_obj = Contract.objects.get_or_create(
-			address=address_obj[0]
+			address=address_obj[0],
+			name=contract_name,
+			is_proxy=is_proxy,
 		)[0]
 
 	if ContractFeatures.objects.filter(contract=contract_obj).exists():
