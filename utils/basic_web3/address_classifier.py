@@ -8,14 +8,17 @@ from utils.extractors.etherscan_extractor import get_contract_abi
 
 def is_contract(address):
 
-    if Address.objects.filter(eth_address=address).exists():
-        address_obj = Address.objects.get(eth_address=address)
+    try:
+        if Address.objects.filter(eth_address=address).exists():
+            address_obj = Address.objects.get(eth_address=address)
 
-        if address_obj.type.lower() == "contract":
-            return True
+            if address_obj.type.lower() == "contract":
+                return True
 
-        else:
-            return False
+            else:
+                return False
+    except:
+        pass
 
     w3 = Web3(Web3.HTTPProvider(settings.WEB3_HTTP_PROVIDER))
     address = w3.toChecksumAddress(address)

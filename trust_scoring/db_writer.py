@@ -116,7 +116,8 @@ def process_db_store(address, code_links, attribute_links):
 
 	all_addresses = code_links + attribute_links
 	for address in all_addresses:
-		if not (is_null_address(address)) and is_contract(address):
+		if not (is_null_address(address)) and is_contract(address) and \
+				not(ContractFeatures.objects.filter(contract__address__eth_address=address).exists()):
 			generate_scores(address)
 
 
