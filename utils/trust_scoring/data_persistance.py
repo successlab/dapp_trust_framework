@@ -7,9 +7,12 @@ from trust_scoring.models import ContractFeatures
 from contract_relations.models import Contract, Address
 
 @shared_task
-def write_features_df_into_db(address, features_df_json, contract_name="", is_proxy=False, web3js_uses_dict=None, n_months=6, trust_score=None):
+def write_features_df_into_db(address, features_df_json, is_proxy=False, contract_name="", web3js_uses_dict=None, n_months=6, trust_score=None):
 	if web3js_uses_dict is not None:
 		web3js_uses_dict = web3js_uses_dict
+
+	if contract_name is None:
+		contract_name = ""
 
 	features_df = pd.read_json(features_df_json)
 

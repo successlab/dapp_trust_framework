@@ -48,6 +48,7 @@ def is_null_address(address):
     # Source: https://etherscan.io/accounts/label/burn
     null_addresses = {
         ("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE").lower(): True,
+        ("0xfeEFEEfeefEeFeefEEFEEfEeFeefEEFeeFEEFEeF").lower(): True,
         "0x000000000000000000000000000000000000dead": True,
         "0x0000000000000000000000000000000000000000": True,
         "0x0000000000000000000000000000000000000001": True,
