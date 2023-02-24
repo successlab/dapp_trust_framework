@@ -34,12 +34,19 @@ def generate_and_store_score(address):
 		"contract_trust_score": prob_score,
 		"contract_name": contract_name,
 		"is_proxy": is_proxy,
-		"contract_attributes": contract_attribs_df.iloc[0].to_dict(),
-		"open_source_web3js_interfaces": web3js_uses,
 	}
 
+	dapp_family_links, dapp_trust_score = get_collective_linked_score_bfs(address)
+	if dapp_family_links is None:
+		dapp_family_links = "Generating, check back later"
+		dapp_trust_score = "Generating, check back later"
+
+	response_dict["dapp_trust_score"] = dapp_trust_score
+	response_dict["contract_attributes"] = contract_attribs_df.iloc[0].to_dict()
 	code_contracts = find_links_and_store_in_db(address)
 	response_dict["immediate_links"] = code_contracts
+	response_dict["dapp_family_links"] = dapp_family_links
+	response_dict["open_source_web3js_interfaces"] = web3js_uses
 
 	return response_dict
 
@@ -51,7 +58,7 @@ def find_links_and_store_in_db(address):
 
 	code_contracts = []
 	for link_address in code_links:
-		if is_contract(link_address):
+		if is_contract(link_address) and not(is_null_address(link_address)):
 			link_dict = {"address": link_address}
 
 			try:
@@ -120,7 +127,7 @@ def process_db_store(address, code_links, attribute_links):
 	for address in all_addresses:
 		if not (is_null_address(address)) and is_contract(address) and \
 				not(ContractFeatures.objects.filter(contract__address__eth_address=address).exists()):
-			generate_scores(address)
+			generate_scores.delay(address)
 
 
 @shared_task
@@ -129,19 +136,40 @@ def generate_scores(address):
 	generate_and_store_score(address)
 
 
-def get_collective_linked_score_bfs(address, immediate_links_output):
-	'''
-	TODO:
-		1. Run a BFS and find all the linked contracts with CodeMention relation type
-		2. Store all the explored contract addresses in a list
-		3. Average out the trust scores of all the contracts
-	'''
-
+def get_collective_linked_score_bfs(address):
 	all_contracts = [address]
-	for immediate_link_output in immediate_links_output:
-		all_contracts.append(immediate_link_output["address"])
 
 	explored = {}
+	scores_to_generate = []
 
+	# Running BFS and exploring deep links
 	while len(all_contracts) > 0:
-		pass
+		contract_address_in_focus = all_contracts.pop()
+
+		if not(ContractFeatures.objects.filter(contract__address__eth_address=contract_address_in_focus).exists()):
+			scores_to_generate.append(contract_address_in_focus)
+			continue
+
+		else:
+			trust_score = ContractFeatures.objects.get(
+				contract__address__eth_address=contract_address_in_focus
+			).trust_score
+			explored[contract_address_in_focus] = trust_score
+
+			code_links, _ = get_linked_addresses(contract_address_in_focus, False)
+
+			for link in code_links:
+				if link not in explored:
+					if is_null_address(link) is False:
+						all_contracts = [link] + all_contracts
+
+	# Filling in the missing contract scores
+	if len(scores_to_generate) != 0:
+		for contract_address in scores_to_generate:
+			generate_scores.delay(contract_address)
+
+		return None, -1
+
+	# Calculating the overall trust score
+	dapp_trust_score = sum(explored.values())/len(explored)
+	return explored, dapp_trust_score
