@@ -159,9 +159,8 @@ def get_collective_linked_score_bfs(address):
 			code_links, _ = get_linked_addresses(contract_address_in_focus, False)
 
 			for link in code_links:
-				if link not in explored:
-					if is_null_address(link) is False:
-						all_contracts = [link] + all_contracts
+				if (link not in explored) and is_contract(link) and (is_null_address(link) is False):
+					all_contracts = [link] + all_contracts
 
 	# Filling in the missing contract scores
 	if len(scores_to_generate) != 0:
