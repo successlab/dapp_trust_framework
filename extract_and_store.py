@@ -58,6 +58,68 @@ def read_address_list(filename="address_list.txt"):
 	return addresses
 
 
+def get_web3js_api_output(address):
+	cookies = {
+		'csrftoken': 'nMuzkziT2RUPVhHP9mee0Fmo2AfE7GsrohaT8F5SLtsSncaAa22Yi9dTtIuD9tFe',
+	}
+
+	headers = {
+		'Content-Type': 'application/json',
+		# 'Cookie': 'csrftoken=nMuzkziT2RUPVhHP9mee0Fmo2AfE7GsrohaT8F5SLtsSncaAa22Yi9dTtIuD9tFe',
+	}
+
+	json_data = {
+		'address': addresses,
+	}
+
+	response = requests.get('http://localhost:8000/web3jstrust/web3js_stats/', cookies=cookies, headers=headers,
+							json=json_data)
+
+	return response.json()
+
+
+def get_abi_output(address):
+	cookies = {
+		'csrftoken': 'nMuzkziT2RUPVhHP9mee0Fmo2AfE7GsrohaT8F5SLtsSncaAa22Yi9dTtIuD9tFe',
+	}
+
+	headers = {
+		# 'Cookie': 'csrftoken=nMuzkziT2RUPVhHP9mee0Fmo2AfE7GsrohaT8F5SLtsSncaAa22Yi9dTtIuD9tFe',
+	}
+
+	params = {
+		'address': address,
+	}
+
+	response = requests.get('http://localhost:8000/web3jstrust/abi_availability/', params=params, cookies=cookies,
+							headers=headers)
+
+	return response.json()
+
+
+def extract_w3js_and_abi(addresses, out_csv_path):
+	with open(out_csv_path, "w+") as f:
+		f.write("Address,contains_w3js,contains_abi\n")
+
+		for address in addresses:
+			print("Checking: ", address)
+			try:
+				w3js_output = get_web3js_api_output(address)
+				contains_w3js = 1 if len(w3js_output["web3js_uses"]) != 0 else 0
+			except:
+				print(f"Failed web3js check for {address}")
+				contains_w3js = 0
+
+			try:
+				contains_abi = get_abi_output(address)
+			except:
+				print(f"Failed ABI check for {address}")
+				contains_abi = 0
+
+			f.write(address + "," + str(contains_w3js) + "," + str(contains_abi) + '\n')
+			print("Finished ", address)
+
+
 if __name__ == '__main__':
 	address_list_file_name = "address_list.txt"
 	addresses = read_address_list(address_list_file_name)
