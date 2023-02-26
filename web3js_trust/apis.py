@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from utils.basic_web3.address_classifier import *
 from utils.data_extractor import write_into_dataset
 from utils.github_crawler import get_github_all_code_search_results, check_web3js_usage_parallel
+from utils.trust_scoring.abi_availability_checker import contains_abi
 
 
 class CheckWeb3JSStats(APIView):
@@ -52,3 +53,13 @@ class ExtractData(APIView):
         out_chunks_dir = os.path.join(settings.BASE_DIR, "out_chunks/")
         write_into_dataset(in_csv, out_chunks_dir)
         return Response({"Message": "Success"})
+
+
+class CheckABIAvailability(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        address = request.query_params.get("address")
+        result = 1 if contains_abi(address) else 0
+
+        return Response({"result": result})

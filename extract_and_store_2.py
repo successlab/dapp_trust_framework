@@ -129,7 +129,7 @@ if __name__ == '__main__':
 	# extract_securify_data(addresses, api_key_path)
 
 	out_path_base = "/Users/administrator/Documents/w3js_abi_data_extraction/"
-	addresses = addresses[:4961]
+	addresses = addresses[4961:]
 	part_len = 50
 	last_part = ceil(len(addresses) / part_len)
 
@@ -140,7 +140,7 @@ if __name__ == '__main__':
 		start_range = i * part_len
 		ending_range = start_range + part_len
 
-		out_csv_name = f"first_half_part{i}"
+		out_csv_name = f"second_half_part{i}"
 		chunk_addresses = addresses[start_range:ending_range]
 		extract_and_store_w3js_and_abi(chunk_addresses, out_path_base + out_csv_name)
 
@@ -149,3 +149,4 @@ if __name__ == '__main__':
 	# # print("Starting i: ", starting_i)
 	# # extract_trust_score_output(addresses[(starting_i+1):], out_csv_path)
 	# extract_trust_score_output(addresses, out_csv_path)
+

@@ -16,11 +16,30 @@ def get_all_contract_props(address):
     response_json = response.json()
 
     if response_json['message'] == "OK":
-        response_json = response_json["result"][0]
-        source_code = response_json["SourceCode"]
-        abi = json.loads(response_json["ABI"])
-        is_proxy = response_json["Proxy"] == "1"
-        contract_name = response_json["ContractName"]
+        try:
+            response_json = response_json["result"][0]
+        except:
+            return None, None, False, None
+
+        try:
+            source_code = response_json["SourceCode"]
+        except:
+            source_code = ""
+
+        try:
+            abi = json.loads(response_json["ABI"])
+        except:
+            abi = None
+
+        try:
+            is_proxy = response_json["Proxy"] == "1"
+        except:
+            is_proxy = False
+
+        try:
+            contract_name = response_json["ContractName"]
+        except:
+            contract_name = None
 
         return source_code, abi, is_proxy, contract_name
 
