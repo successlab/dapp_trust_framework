@@ -27,7 +27,10 @@ def get_max_pagecount(search_results_content):
     paginator = response_soup.find(
         "div", class_="paginate-container codesearch-pagination-container"
     )
-    return int(paginator.find_all("a")[-2].text)
+    try:
+        return int(paginator.find_all("a")[-2].text)
+    except:
+        return 1
 
 
 def get_contract_users_and_repos(search_results_content, users_and_repos_mapping=None):
