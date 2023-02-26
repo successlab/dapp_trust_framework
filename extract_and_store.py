@@ -123,7 +123,7 @@ def extract_and_store_w3js_and_abi(addresses, out_csv_path):
 
 
 if __name__ == '__main__':
-	address_list_file_name = "address_list.txt"
+	address_list_file_name = "addresses_to_check.txt"
 	addresses = read_address_list(address_list_file_name)
 	api_key_path = '/sec/api_key.txt'
 	# extract_securify_data(addresses, api_key_path)
