@@ -1,5 +1,5 @@
 features_and_pandas_dtypes = {
-	'n_transactions': 'int',
+	# 'n_transactions': 'int',
 	'avg_trx_freq': 'float',
 	'avg_gas_price': 'float',
 	'avg_gas_consumed': 'float',
@@ -8,18 +8,17 @@ features_and_pandas_dtypes = {
 	'n_unique_incoming_addresses': 'int',
 	'n_deployer_transactions': 'int',
 	'contains_abi': 'int',  # Bool, but convert it into 0/1 (1 - True; 0 - False)
-	'contains_w3_js': 'int', # Bool, but convert it into 0/1 (1 - True; 0 - False)
+	'contains_w3_js': 'int',  # Bool, but convert it into 0/1 (1 - True; 0 - False)
 }
 
 feature_weightages = {
-	'n_transactions': 0.08025426959845469,
-	'avg_trx_freq': 0.0759721055795251,
-	'avg_gas_price': 0.24122253410988187,
-	'avg_gas_consumed': 0.12663152183848098,
-	'median_sender_nonce': 0.17753834793346077,
-	'returning_user_perc': 0.03689057281240384,
-	'n_unique_incoming_addresses': 0.06706199090260874,
-	'n_deployer_transactions': 0.043608406586295174,
-	'contains_abi': 0.1508202506388889,
-	'contains_w3_js': 0.08435056192576892,
+	'avg_trx_freq': 8.64769820082531,
+	'avg_gas_price': 17.212321412386647,
+	'avg_gas_consumed': 11.010181668459143,
+	'median_sender_nonce': 11.466813221967087,
+	'returning_user_perc': 5.163604743908352,
+	'n_unique_incoming_addresses': 7.951081099086453,
+	'n_deployer_transactions': 5.032960947712193,
+	'contains_abi': 29.383812279865477,
+	'contains_w3_js': 4.131526425789332
 }
