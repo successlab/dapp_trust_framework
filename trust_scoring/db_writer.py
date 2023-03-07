@@ -7,6 +7,7 @@ from trust_scoring.models import ContractFeatures
 from utils.basic_web3.address_classifier import is_contract, is_null_address
 from utils.extractors.etherscan_extractor import get_all_contract_props
 from utils.trust_scoring.contract_links import get_linked_addresses
+from utils.trust_scoring.dapp_scoring import get_dapp_trust_score
 from utils.trust_scoring.data_persistance import write_features_df_into_db
 from utils.trust_scoring.feature_extractor import get_features_df
 from utils.trust_scoring.ml_model_runner import get_prob_trust_score
@@ -170,5 +171,6 @@ def get_collective_linked_score_bfs(address):
 		return None, -1
 
 	# Calculating the overall trust score
-	dapp_trust_score = sum(explored.values())/len(explored)
+	# dapp_trust_score = sum(explored.values())/len(explored)
+	dapp_trust_score = get_dapp_trust_score(explored)
 	return explored, dapp_trust_score
