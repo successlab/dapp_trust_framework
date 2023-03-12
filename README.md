@@ -34,7 +34,7 @@ if ENV_TYPE in docker_envs:
    1. **_Note:_** If you haven't connected to Postgres, the app will create an SQLite DB for you within the main directory
 7. Start the server by running: `python manage.py runserver` 
    1. Check out the [Django Documentation](https://docs.djangoproject.com/en/4.1/ref/django-admin/) for more options on running the Django server
-8. For generating the DApp trust score, you also need to be running RabbitMQ on your PC and also start a celery workers by running the command `celery -A contractsecurityapp worker --autoscale=10,1 --loglevel=info`. The celery works must run in parallel to the main app.
+8. For generating the DApp trust score, you also need to be running RabbitMQ on your PC and also start the celery workers by running the command `celery -A contractsecurityapp worker --autoscale=10,1 --loglevel=info`. The celery works must run in parallel to the main app.
 
 ## Sample .env file
 ```angular2html
