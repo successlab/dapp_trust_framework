@@ -1,0 +1,72 @@
+# A trust framework for Decentralized Applications on Ethereum
+This is the back-end service for the framework. It has the following main API:
+`http://localhost:8000/trust_scoring/get_trust_score/?address=<ethereum_address>`
+
+Just replace the `<ethereum_address>` with the address from the main-net and the app will generate the trust score for it.
+
+# Steps for running
+1. Create a python virtual environment by running: `virtualenv venv`
+2. Install the requirements by running: `pip3 install -r requirements.txt`
+3. Create a `.env` file and set the environment variables (check the next sub-section for a sample)
+4. Create a new package called `app_secrets` and a file called `cookies.py` and add the GitHub cookies in it
+5. (Required only if you have set the environment variable named `ENV_TYPE` to `Prod`)
+   1. Go to `contractsecurityapp/settings.py`
+   2. Look for the following snippet of code and set the Postgres properties for the app to point to your own Postgres Database:
+```
+docker_envs = ["Prod", "Docker", "local_prod"]
+if ENV_TYPE in docker_envs:
+    print("Connecting to Postgres")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'password',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
+```
+6. Migrate the DB structure to your database by running: `python manage.py migrate`
+7. Start the server by running: `python manage.py runserver` 
+   1. Check out the [Django Documentation](https://docs.djangoproject.com/en/4.1/ref/django-admin/) for more options on running the Django server
+
+## Sample .env file
+```angular2html
+PYTHONUNBUFFERED=1
+DJANGO_SETTINGS_MODULE=contractsecurityapp.settings
+ENV_TYPE=local
+INFURA_KEY_URL=https://mainnet.infura.io/v3/<your_API_key_from_Infura>
+ETHERSCAN_API_KEY=<your_API_key_from_Etherscan>
+GANACHE_RPC_URL=http://127.0.0.1:8545 # This is optional
+```
+
+## Sample app_secrets/cookies.py file
+```angular2html
+github_cookie = '<your_github_cookie_string>'
+github_header = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/109.0',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.5',
+    # 'Accept-Encoding': 'gzip, deflate, br',
+    'Referer': 'https://github.com/',
+    'DNT': '1',
+    'Connection': 'keep-alive',
+    'Cookie': '<your_github_cookie_string>'
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-User': '?1',
+    'If-None-Match': 'W/"something"',
+    # Requests doesn't support trailers
+    # 'TE': 'trailers',
+}
+```
+
+### Recommended method for getting the GitHub cookie and header
+1. Log into your GitHub account
+2. Open the `inspect` tab on your browser and look for the `network` section within it
+3. Right-click on one of the requests and select `copy as cURL`
+4. Use an online cURL to Python converter (such as: https://curlconverter.com)
+5. Copy the cookie string and the header dictionary and paste it in `app_secrets/cookies.py` 
