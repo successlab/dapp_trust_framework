@@ -1,5 +1,7 @@
 import pandas as pd
 
+from django.conf import settings
+
 from trust_scoring.models import ContractFeatures
 from .abi_availability_checker import contains_abi
 from .model_features import features_and_pandas_dtypes
@@ -34,7 +36,7 @@ def fill_in_features_from_db(df, address):
 	features_obj = ContractFeatures.objects.get(contract__address__eth_address=address)
 
 	val_list = []
-	val_list.append(features_obj.n_transactions)
+	# val_list.append(features_obj.n_transactions)
 	val_list.append(features_obj.avg_trx_freq)
 	val_list.append(features_obj.avg_gas_price)
 	val_list.append(features_obj.avg_gas_consumed)
@@ -60,12 +62,13 @@ def fill_in_features_from_db(df, address):
 	return df, web3js_uses, trust_score
 
 
-def fill_in_features(df, address, transaction_len_limit=6):
+def fill_in_features(df, address):
+	transaction_len_limit = settings.TRANSACTIONS_LIMIT_IN_MONTHS
 	transactions = get_all_transactions_until_limit(address, transaction_len_limit)
 
 	val_list = []
 
-	val_list.append(len(transactions))
+	# val_list.append(len(transactions))
 
 	try:
 		# df.loc[0]["avg_trx_freq"] = get_avg_trx_freq(transactions)
