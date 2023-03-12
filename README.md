@@ -28,6 +28,7 @@ if ENV_TYPE in docker_envs:
     }
 ```
 6. Migrate the DB structure to your database by running: `python manage.py migrate`
+   1. **_Note:_** If you haven't connected to Postgres, the app will create an SQLite DB for you within the main directory
 7. Start the server by running: `python manage.py runserver` 
    1. Check out the [Django Documentation](https://docs.djangoproject.com/en/4.1/ref/django-admin/) for more options on running the Django server
 
