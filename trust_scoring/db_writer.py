@@ -11,6 +11,7 @@ from utils.trust_scoring.dapp_scoring import get_dapp_trust_score
 from utils.trust_scoring.data_persistance import write_features_df_into_db
 from utils.trust_scoring.feature_extractor import get_features_df
 from utils.trust_scoring.ml_model_runner import get_prob_trust_score
+from utils.trust_scoring.model_features import legit_limits, malicious_limits
 
 
 def generate_and_store_score(address):
@@ -48,6 +49,10 @@ def generate_and_store_score(address):
 	response_dict["immediate_links"] = code_contracts
 	response_dict["dapp_family_links"] = dapp_family_links
 	response_dict["open_source_web3js_interfaces"] = web3js_uses
+
+	response_dict["limits"] = {}
+	response_dict["limits"]["legit_limits"] = legit_limits
+	response_dict["limits"]["malicious_limits"] = malicious_limits
 
 	return response_dict
 
