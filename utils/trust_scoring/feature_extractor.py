@@ -89,7 +89,7 @@ def fill_in_features(df, address):
 
 	try:
 		w3js_import_val, web3js_uses = get_w3js_uses(address)
-		val_list.append(1 if w3js_import_val is True else 0)
+		val_list.append(1 if (len(web3js_uses) > 0) else 0)
 	except:
 		web3js_uses = []
 		val_list.append(0)
