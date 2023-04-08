@@ -52,4 +52,4 @@ def extract_and_store(n=1, num_threads=4):
 
 
 if __name__ == '__main__':
-    extract_and_store(n=6, num_threads=multiprocessing.cpu_count())
+    extract_and_store(n=600, num_threads=multiprocessing.cpu_count())
